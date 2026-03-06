@@ -1,13 +1,1186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn Git</title>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #4facfe;
+      --primary-end: #00f2fe;
+      --bg-start: #e8f0fe;
+      --bg-end: #d0e8ff;
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(145deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+
+    .insta-card {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(79,172,254,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-end));
+      box-shadow: 0 4px 16px rgba(79,172,254,0.4);
+      transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .login-input {
+      width: 100%; padding: 13px 16px;
+      background: #f8faff;
+      border: 2px solid #e8f0fe;
+      border-radius: 14px;
+      outline: none;
+      transition: all 0.25s;
+      font-family: 'Kanit', sans-serif;
+    }
+    .login-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79,172,254,0.12); background: white; }
+
+    .nav-bar {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 2px 12px rgba(79,172,254,0.08);
+    }
+
+    .nav-pill-wrap {
+      display: flex;
+      gap: 5px;
+      background: #f0f5ff;
+      padding: 5px;
+      border-radius: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-pill-wrap::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 12px;
+      border: none;
+      border-radius: 11px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1);
+      background: transparent;
+      color: #94a3b8;
+      position: relative;
+    }
+    .nav-btn .nav-icon { font-size: 13px; }
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-end));
+      color: white;
+      box-shadow: 0 3px 10px rgba(79,172,254,0.4);
+      transform: scale(1.04);
+    }
+    .nav-btn:not(.active):hover {
+      background: white;
+      color: var(--primary);
+      transform: scale(1.02);
+    }
+
+    .score-badge {
+      background: white;
+      border-radius: 14px;
+      border: 1.5px solid #edf2f7;
+      transition: all 0.2s;
+    }
+    .score-badge:hover { border-color: var(--primary); transform: scale(1.02); }
+
+    .btn-read { background-color: #dcfce7 !important; color: #166534 !important; border-color: #bbf7d0 !important; }
+
+    .btn-qa-send {
+      background: linear-gradient(135deg, var(--primary), var(--primary-end));
+      box-shadow: 0 4px 14px rgba(79,172,254,0.35);
+      transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .btn-qa-send:active { transform: scale(0.97); }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .section-header h2 {
+      font-size: 20px; font-weight: 900;
+      color: #1e293b;
+      letter-spacing: -0.3px;
+    }
+    .section-header p {
+      font-size: 10px; font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+    }
+
+    .accordion-content-wrapper {
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.45s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease;
+      pointer-events: none;
+    }
+    .accordion-content-wrapper.is-open {
+      max-height: 3000px; opacity: 1;
+      pointer-events: auto; margin-top: 8px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.3s ease forwards; }
+
+    /* ── [แก้ไข] ความหนาตัวเลขนับถอยหลัง ── */
+    .countdown-num {
+      font-size: 2.5rem;      /* ขนาดตัวเลข */
+      font-weight: 700;       /* ← หนาสุด */
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    .countdown-sep {
+      font-size: 2rem;
+      font-weight: 700;       /* ← หนาสุด */
+      margin-bottom: 1rem;
+    }
+    .countdown-label {
+      font-size: 10px;
+      font-weight: 700;       /* ← หนากว่าเดิม (เดิมเป็น bold=700) */
+      opacity: 0.85;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
-  <p>this is home page</p>
-  <p>nattaten Nattapat Kaewthong</p>
+
+  <!-- ── Login Screen ── -->
+  <div id="login-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+    <div class="max-w-sm w-full">
+      <div class="text-center mb-6 fade-up">
+        <div class="inline-flex p-5 rounded-3xl bg-white shadow-xl mb-4" style="box-shadow:0 8px 32px rgba(79,172,254,0.18)">
+          <span style="font-size:48px">🎓</span>
+        </div>
+        <h1 style="font-size:36px;font-weight:900;background:linear-gradient(135deg,#4facfe,#00f2fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Qtutor</h1>
+        <p style="font-size:13px;color:#94a3b8;margin-top:4px;">ระบบสรุปผลคะแนน "เฮือกสุดท้าย" 🔥</p>
+      </div>
+      <div class="fade-up" style="background:rgba(255,255,255,0.95);border-radius:24px;padding:28px;box-shadow:0 8px 32px rgba(79,172,254,0.12);animation-delay:0.1s">
+        <select id="loginName" class="login-input cursor-pointer text-center font-semibold mb-3">
+          <option value="">กำลังโหลดรายชื่อ...</option>
+        </select>
+        <input type="tel" id="loginPhone" placeholder="เบอร์โทรศัพท์ผู้ปกครอง เช่น 097018****" class="login-input text-center mb-5">
+        <button onclick="handleLogin()" id="btnLogin" class="btn-primary w-full text-white font-bold py-4 rounded-2xl text-[15px]">
+          เข้าสู่ระบบ →
+        </button>
+        <p class="text-center mt-5 text-[10px] text-gray-300 uppercase tracking-widest">พัฒนาโดย พี่เท็น กวดวิชาคิวติวเตอร์</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main Content ── -->
+  <div id="main-content" class="hidden">
+
+    <nav class="nav-bar px-4 pt-4 pb-3 mb-5">
+      <div class="max-w-md mx-auto">
+        <div class="flex justify-between items-center mb-3">
+          <h1 style="font-size:20px;font-weight:900;background:linear-gradient(135deg,#4facfe,#00f2fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Qtutor</h1>
+          <button onclick="handleLogout()" style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#ef4444;background:none;border:none;cursor:pointer;font-family:'Kanit',sans-serif;">
+            ออกจากระบบ
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          </button>
+        </div>
+        <div class="nav-pill-wrap">
+          <button onclick="showSection('individual')" id="btn-indiv" class="nav-btn active">
+            <span class="nav-icon">📊</span>ของฉัน
+          </button>
+          <button onclick="showSection('overview')" id="btn-over" class="nav-btn">
+            <span class="nav-icon">🏆</span>อันดับ
+          </button>
+          <button onclick="showSection('answers')" id="btn-answers" class="nav-btn">
+            <span class="nav-icon">📖</span>เฉลย
+          </button>
+          <button onclick="showSection('videos')" id="btn-videos" class="nav-btn">
+            <span class="nav-icon">🎬</span>เรียน
+          </button>
+          <button onclick="showSection('qa')" id="btn-qa" class="nav-btn" style="position:relative;">
+            <span class="nav-icon">💬</span>Q&A
+            <span id="qa-badge" class="hidden" style="position:absolute;top:3px;right:3px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid white;"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-md mx-auto px-4 pb-10">
+      <section id="individual-section">
+        <div id="admin-selector-area"></div>
+        <div id="indivContent"></div>
+      </section>
+
+      <section id="overview-section" class="hidden">
+        <div class="insta-card p-5 mb-5 fade-up">
+          <label class="text-[11px] font-bold text-gray-400 mb-2 block uppercase tracking-widest text-center">เลือกชุดการสอบ</label>
+          <select id="testSelect" onchange="renderOverview()" class="w-full p-3 bg-blue-50 border-0 rounded-xl outline-none font-bold text-blue-600 text-center cursor-pointer" style="font-family:'Kanit',sans-serif;"></select>
+        </div>
+        <div id="overContent"></div>
+      </section>
+
+      <section id="answers-section" class="hidden">
+        <div class="insta-card p-6 fade-up">
+          <div class="section-header">
+            <h2>📖 คลังเฉลย</h2>
+            <p>เฉลยแยกตามวันที่เรียน</p>
+          </div>
+          <div id="answerList" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <section id="qa-section" class="hidden">
+        <div class="insta-card p-6 mb-5 fade-up">
+          <div class="section-header">
+            <h2>💬 ถามครูผู้สอน</h2>
+            <p>ตอบกลับภายใน 24 ชั่วโมง</p>
+          </div>
+          <textarea id="questionInput" rows="3" placeholder="น้องมีข้อสงสัยตรงไหน พิมพ์ถามครูได้เลยนะครับ..." style="width:100%;padding:14px;background:#f8faff;border:2px solid #e8f0fe;border-radius:14px;outline:none;font-family:'Kanit',sans-serif;font-size:13px;resize:none;margin-bottom:12px;transition:border 0.2s;" onfocus="this.style.borderColor='#4facfe'" onblur="this.style.borderColor='#e8f0fe'"></textarea>
+          <button onclick="submitQuestion()" class="btn-qa-send w-full text-white font-bold py-3 rounded-2xl text-[14px]">
+            ส่งคำถาม 📨
+          </button>
+        </div>
+        <div id="qa-history" class="space-y-4 pb-10"></div>
+      </section>
+    </main>
+
+    <main id="main-container" class="max-w-md mx-auto px-4 pb-10">
+      <section id="videos-section" class="hidden">
+        <div id="video-dashboard" class="mb-6"></div>
+        <div id="videoList" class="flex flex-col gap-4 w-full max-w-3xl mx-auto"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let globalData    = [];
+    let currentUser   = "";
+    let isAdmin       = false;
+    let readFilesList = [];
+
+    let isAnswersLoaded = false;
+    let isVideosLoaded  = false;
+    let isQALoaded      = false;
+    let studentProgress = [];
+
+    window.onload = () => {
+      const loadTimeout = setTimeout(() => {
+        Swal.fire({
+          icon: 'warning', title: 'โหลดข้อมูลช้า',
+          text: 'กรุณาตรวจสอบการเชื่อมต่อ แล้วลองรีเฟรชใหม่',
+          confirmButtonText: 'รีเฟรช', confirmButtonColor: '#4facfe'
+        }).then(() => location.reload());
+      }, 15000);
+
+      google.script.run
+        .withSuccessHandler(res => {
+          clearTimeout(loadTimeout);
+          if (res.error) {
+            Swal.fire({ icon: 'error', title: 'โหลดข้อมูลไม่สำเร็จ', text: 'กรุณารีเฟรชหน้าใหม่', confirmButtonColor: '#4facfe' });
+            return;
+          }
+          globalData = res.rows;
+          populateLoginSelector();
+          populateTestSelector();
+
+          try {
+            const savedUser    = localStorage.getItem('qtutor_user');
+            const savedIsAdmin = localStorage.getItem('qtutor_isAdmin') === 'true';
+            if (savedUser) {
+              const stillExists = savedIsAdmin || globalData.some(r => r[0] === savedUser);
+              if (stillExists) {
+                currentUser = savedUser;
+                isAdmin     = savedIsAdmin;
+                afterLogin();
+              } else {
+                localStorage.clear();
+              }
+            }
+          } catch (e) {
+            try { localStorage.clear(); } catch (_) {}
+          }
+        })
+        .withFailureHandler(err => {
+          clearTimeout(loadTimeout);
+          Swal.fire({
+            icon: 'error', title: 'เชื่อมต่อไม่สำเร็จ',
+            text: 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต',
+            confirmButtonText: 'ลองใหม่', confirmButtonColor: '#4facfe'
+          }).then(() => location.reload());
+        })
+        .getSheetData();
+    };
+
+    function populateLoginSelector() {
+      const sel   = document.getElementById('loginName');
+      const names = [...new Set(globalData.map(r => r[0]))].sort();
+      names.unshift("admin");
+      sel.innerHTML = '<option value="">กรุณาเลือกชื่อเล่นของน้อง</option>';
+      names.forEach(n => sel.add(new Option(n, n)));
+    }
+
+    function handleLogin() {
+      const name  = document.getElementById('loginName').value;
+      const phone = document.getElementById('loginPhone').value.trim();
+      if (!name || !phone) {
+        Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูล', text: 'กรุณาเลือกชื่อและใส่เบอร์โทรศัพท์', confirmButtonColor: '#4facfe' });
+        return;
+      }
+      Swal.fire({ title: 'กำลังตรวจสอบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      google.script.run
+        .withSuccessHandler(res => {
+          Swal.close();
+          if (res.success) {
+            currentUser = res.name;
+            isAdmin     = res.isAdmin;
+            localStorage.setItem('qtutor_user',    res.name);
+            localStorage.setItem('qtutor_isAdmin', res.isAdmin);
+            afterLogin();
+            Swal.fire({ icon: 'success', title: `ยินดีต้อนรับน้อง ${res.name}`, toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+          } else {
+            Swal.fire({ icon: 'error', title: 'เข้าสู่ระบบไม่สำเร็จ', text: res.message, confirmButtonColor: '#ef4444' });
+          }
+        })
+        .checkLogin(name, phone);
+    }
+
+    function afterLogin() {
+      google.script.run
+        .withSuccessHandler(files => { readFilesList = files; })
+        .getReadLogs(currentUser);
+
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+
+      isAdmin ? setupAdminView() : renderIndividual(currentUser);
+      renderAnswers();
+      renderCountdown();
+      checkQABadge();
+
+      if (!isAdmin) setInterval(checkQABadge, 30000);
+    }
+
+    // ─── [แก้ไข] ฟีเจอร์นับถอยหลัง — ใช้ class countdown-num/sep/label ──
+    function renderCountdown() {
+      if (isAdmin) return;
+      const EXAM_DATE = new Date('2026-03-28T08:00:00');
+
+      function update() {
+        const now    = new Date();
+        const diffMs = EXAM_DATE - now;
+        const area   = document.getElementById('countdown-widget');
+        if (!area) return;
+
+        let html = '';
+        if (diffMs <= 0) {
+          html = `<div class="insta-card p-4 mb-4 text-center border-0 bg-gradient-to-r from-green-500 to-emerald-400">
+            <p class="text-white font-black text-lg">🎉 วันสอบมาถึงแล้ว! สู้ๆ นะครับ</p>
+          </div>`;
+        } else {
+          const days    = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const hours   = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+          const urgency = days <= 7  ? 'from-red-500 to-orange-400'
+                        : days <= 30 ? 'from-orange-400 to-yellow-400'
+                        :              'from-blue-500 to-cyan-400';
+          /* ── [แก้ไข] ใช้ class countdown-num / countdown-sep / countdown-label ── */
+          html = `
+            <div class="insta-card p-4 mb-4 border-0 bg-gradient-to-r ${urgency} text-white text-center shadow-lg">
+              <p style="font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:10px;">⏳ เหลือเวลาอีก</p>
+              <div class="flex justify-center items-end gap-2">
+                <div>
+                  <p class="countdown-num">${days}</p>
+                  <p class="countdown-label">วัน</p>
+                </div>
+                <p class="countdown-sep">:</p>
+                <div>
+                  <p class="countdown-num">${String(hours).padStart(2,'0')}</p>
+                  <p class="countdown-label">ชั่วโมง</p>
+                </div>
+                <p class="countdown-sep">:</p>
+                <div>
+                  <p class="countdown-num">${String(minutes).padStart(2,'0')}</p>
+                  <p class="countdown-label">นาที</p>
+                </div>
+                <p class="countdown-sep">:</p>
+                <div>
+                  <p class="countdown-num tabular-nums">${String(seconds).padStart(2,'0')}</p>
+                  <p class="countdown-label">วินาที</p>
+                </div>
+              </div>
+              <p style="font-size:10px;margin-top:12px;opacity:0.85;font-style:italic;font-weight:600;">ก่อนวันสอบเข้า ม.1 💪</p>
+            </div>`;
+        }
+        area.innerHTML = html;
+      }
+
+      const existing = document.getElementById('countdown-widget');
+      if (existing) existing.remove();
+      const el = document.createElement('div');
+      el.id = 'countdown-widget';
+      const area = document.getElementById('admin-selector-area');
+      area.parentNode.insertBefore(el, area.nextSibling);
+
+      update();
+      setInterval(update, 1000);
+    }
+
+    function checkQABadge() {
+      if (isAdmin) return;
+      google.script.run
+        .withSuccessHandler(qaList => {
+          const hasNew = qaList.some(item =>
+            item.answer && item.answer !== "รอครูผู้สอนตอบสักครู่..."
+            && !localStorage.getItem(`qa_read_${currentUser}_${item.date}`)
+          );
+          document.getElementById('qa-badge').classList.toggle('hidden', !hasNew);
+        })
+        .getMyQA(currentUser);
+    }
+
+    function handleLogout() {
+      Swal.fire({ title: 'ออกจากระบบ?', icon: 'warning', showCancelButton: true, confirmButtonText: 'ตกลง' })
+        .then(res => { if (res.isConfirmed) { localStorage.clear(); location.reload(); } });
+    }
+
+    function showSection(sec) {
+      const mainContainer = document.getElementById('main-container');
+      if (sec === 'videos') {
+        mainContainer.classList.replace('max-w-md', 'max-w-full');
+        mainContainer.classList.add('lg:px-20');
+      } else {
+        mainContainer.classList.replace('max-w-full', 'max-w-md');
+        mainContainer.classList.remove('lg:px-20');
+      }
+
+      ['individual', 'overview', 'answers', 'qa', 'videos'].forEach(s => {
+        document.getElementById(`${s}-section`)?.classList.add('hidden');
+      });
+      document.getElementById(`${sec}-section`)?.classList.remove('hidden');
+
+      const btnMap = { individual: 'btn-indiv', overview: 'btn-over', answers: 'btn-answers', qa: 'btn-qa', videos: 'btn-videos' };
+      Object.entries(btnMap).forEach(([key, id]) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.classList.toggle('active', key === sec);
+      });
+
+      if (sec === 'qa') document.getElementById('qa-badge').classList.add('hidden');
+      if (sec === 'videos' && !isVideosLoaded) renderVideos();
+      if (sec === 'qa'     && !isQALoaded)     renderQA();
+    }
+
+    function setupAdminView() {
+      const names = [...new Set(globalData.map(r => r[0]))].sort();
+      document.getElementById('admin-selector-area').innerHTML = `
+        <div class="insta-card p-4 mb-6 bg-blue-600 text-center">
+          <p class="text-[10px] font-bold text-white/70 mb-2 uppercase italic">Admin Mode</p>
+          <select onchange="renderIndividual(this.value)" class="w-full p-3 bg-white border-0 rounded-xl outline-none font-bold text-blue-600">
+            <option value="">ค้นหารายชื่อ...</option>
+            ${names.map(n => `<option value="${n}">${n}</option>`).join('')}
+          </select>
+        </div>`;
+    }
+
+    function populateTestSelector() {
+      const sel   = document.getElementById('testSelect');
+      const tests = [...new Set(globalData.map(r => r[8]))].sort();
+      sel.innerHTML = '<option value="">เลือกครั้งที่สอบ...</option>';
+      tests.forEach(t => sel.add(new Option(t, t)));
+    }
+
+    function renderIndividual(name) {
+      if (!name) return;
+      const filtered = globalData
+        .filter(r => r[0] === name)
+        .sort((a, b) => a[8].toString().localeCompare(b[8].toString(), undefined, { numeric: true }));
+
+      const scores = filtered.map(r => parseFloat(r[7] || 0));
+      const avg    = (scores.reduce((a, b) => a + b, 0) / filtered.length).toFixed(2);
+
+      document.getElementById('indivContent').innerHTML = `
+        <div class="insta-card p-6 shadow-xl border-0 bg-white">
+          <div class="flex justify-end mb-4">
+            <button onclick="downloadIndividualImage(this)" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-[10px] font-bold shadow-md active:scale-95 transition-all flex items-center gap-2">
+              📸 บันทึกภาพ
+            </button>
+          </div>
+          <div id="capture-individual" style="background:white;padding:16px;border-radius:24px;border:1px solid #f8fafc;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;">
+              <div>
+                <h2 style="font-size:28px;font-weight:900;color:#1a202c;margin:0;">${name}</h2>
+                <p style="font-size:11px;color:#3b82f6;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:2px 0 0;">Dashboard สรุปผลรายบุคคล</p>
+              </div>
+              <div style="text-align:right;">
+                <p style="font-size:9px;color:#9ca3af;text-transform:uppercase;margin:0;">สถิติรวม</p>
+                <p style="font-size:12px;font-weight:700;color:#4b5563;margin:0;">${filtered.length} การทดสอบ</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;">
+              <div style="background:#eff6ff;padding:14px;border-radius:16px;text-align:center;">
+                <p style="font-size:10px;color:#60a5fa;font-weight:600;text-transform:uppercase;margin:0 0 4px;">เฉลี่ย</p>
+                <p style="font-size:20px;font-weight:700;color:#2563eb;margin:0;">${avg}%</p>
+              </div>
+              <div style="background:#f0fdf4;padding:14px;border-radius:16px;text-align:center;">
+                <p style="font-size:10px;color:#4ade80;font-weight:600;text-transform:uppercase;margin:0 0 4px;">สูงสุด</p>
+                <p style="font-size:20px;font-weight:700;color:#16a34a;margin:0;">${Math.max(...scores).toFixed(2)}%</p>
+              </div>
+              <div style="background:#faf5ff;padding:14px;border-radius:16px;text-align:center;">
+                <p style="font-size:10px;color:#c084fc;font-weight:600;text-transform:uppercase;margin:0 0 4px;">สถานะ</p>
+                <p style="font-size:12px;font-weight:700;color:#9333ea;margin:6px 0 0;font-style:italic;">${avg > 55 ? 'ผ่านเกณฑ์' : 'พยายามอีก!'}</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+              ${filtered.map(r => `
+                <div style="background:white;border:2px solid #f1f5f9;border-radius:16px;padding:12px;overflow:hidden;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <span style="font-weight:700;color:#374151;font-size:14px;">${r[8]}</span>
+                    <div style="background:#4f46e5;padding:5px 12px;border-radius:6px;flex-shrink:0;">
+                      <span style="color:white;font-size:12px;font-weight:700;white-space:nowrap;">${parseFloat(r[7]).toFixed(2)}%</span>
+                    </div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                    <div style="background:white;border:1px solid #edf2f7;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#9ca3af;font-weight:600;margin:0 0 4px;">คณิต (60)</p>
+                      <p style="font-size:18px;font-weight:600;color:#2563eb;margin:0;">${parseFloat(r[1]).toFixed(1)}</p>
+                    </div>
+                    <div style="background:white;border:1px solid #edf2f7;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#9ca3af;font-weight:600;margin:0 0 4px;">วิทย์ (60)</p>
+                      <p style="font-size:18px;font-weight:600;color:#2563eb;margin:0;">${parseFloat(r[2]).toFixed(1)}</p>
+                    </div>
+                    <div style="background:white;border:1px solid #edf2f7;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#9ca3af;font-weight:600;margin:0 0 4px;">อังกฤษ (50)</p>
+                      <p style="font-size:18px;font-weight:600;color:#2563eb;margin:0;">${parseFloat(r[3]).toFixed(1)}</p>
+                    </div>
+                    <div style="background:white;border:1px solid #edf2f7;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#9ca3af;font-weight:600;margin:0 0 4px;">ไทย (40)</p>
+                      <p style="font-size:18px;font-weight:600;color:#2563eb;margin:0;">${parseFloat(r[4]).toFixed(1)}</p>
+                    </div>
+                    <div style="background:white;border:1px solid #edf2f7;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#9ca3af;font-weight:600;margin:0 0 4px;">สังคม (40)</p>
+                      <p style="font-size:18px;font-weight:600;color:#2563eb;margin:0;">${parseFloat(r[5]).toFixed(1)}</p>
+                    </div>
+                    <div style="background:#eef2ff;border:1px solid #e0e7ff;border-radius:10px;padding:10px;">
+                      <p style="font-size:9px;color:#818cf8;font-weight:600;margin:0 0 4px;">รวม (250)</p>
+                      <p style="font-size:18px;font-weight:700;color:#3730a3;margin:0;">${parseFloat(r[6]).toFixed(1)}</p>
+                    </div>
+                  </div>
+                </div>`).join('')}
+            </div>
+            <div style="background:#fefce8;border:1px solid #fef08a;border-radius:16px;padding:14px;text-align:center;">
+              <p style="font-size:11px;color:#374151;font-style:italic;margin:0;">
+                💡 <span style="color:#dc2626;font-weight:700;">เป้าหมาย:</span>
+                ทำคะแนนให้ได้มากกว่า <span style="font-weight:700;text-decoration:underline;">ร้อยละ 55</span> เพื่อสิทธิ์ในการสอบติด
+              </p>
+            </div>
+          </div>
+        </div>
+
+        ${filtered.length >= 2 ? `
+        <div class="insta-card p-5 mt-4 border-0 bg-white shadow-xl">
+          <h3 class="text-sm font-black text-gray-700 mb-1">📈 กราฟพัฒนาการ</h3>
+          <p class="text-[10px] text-gray-400 mb-4">คะแนนรวม % เทียบแต่ละครั้งสอบ</p>
+          <div class="relative" style="height:160px;">
+            <canvas id="progressChart"></canvas>
+          </div>
+        </div>` : ''}`;
+
+      if (filtered.length >= 2) {
+        setTimeout(() => {
+          const canvas = document.getElementById('progressChart');
+          if (!canvas) return;
+          if (canvas._chartInstance) canvas._chartInstance.destroy();
+          const labels = filtered.map(r => r[8].toString());
+          const scores = filtered.map(r => parseFloat(r[7] || 0));
+          canvas._chartInstance = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [{
+                label: 'คะแนน %',
+                data: scores,
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79,70,229,0.08)',
+                borderWidth: 2.5,
+                pointBackgroundColor: scores.map((s, i) =>
+                  i === scores.indexOf(Math.max(...scores)) ? '#22c55e' :
+                  i === scores.indexOf(Math.min(...scores)) ? '#ef4444' : '#4f46e5'),
+                pointRadius: 5,
+                tension: 0.3,
+                fill: true
+              }, {
+                label: 'เป้าหมาย 55%',
+                data: labels.map(() => 55),
+                borderColor: '#f59e0b',
+                borderWidth: 1.5,
+                borderDash: [5, 4],
+                pointRadius: 0,
+                fill: false
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { min: 0, max: 100, ticks: { font: { size: 10 }, callback: v => v + '%' }, grid: { color: '#f1f5f9' } },
+                x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+              }
+            }
+          });
+        }, 100);
+      }
+    }
+
+    function renderOverview() {
+      const test = document.getElementById('testSelect').value;
+      if (!test) return;
+
+      const filtered = globalData.filter(r => r[8] === test);
+      const sorted   = [...filtered].sort((a, b) => b[7] - a[7]);
+      const myIndex  = sorted.findIndex(r => r[0] === currentUser);
+      const myData   = myIndex !== -1 ? sorted[myIndex] : null;
+      const myScore  = myData ? parseFloat(myData[7]) : 0;
+
+      const getAvg = col => (filtered.reduce((a, b) => a + parseFloat(b[col] || 0), 0) / filtered.length).toFixed(1);
+      const roomAvgTotal = (filtered.reduce((a, b) => a + parseFloat(b[7] || 0), 0) / filtered.length).toFixed(2);
+
+      document.getElementById('overContent').innerHTML = `
+        <div class="insta-card p-4 shadow-2xl border-0 overflow-hidden bg-white">
+          <div class="flex justify-end mb-2">
+            <button onclick="downloadScoreImage(this)" class="px-3 py-1.5 bg-blue-500 text-white rounded-xl text-[10px] font-bold shadow-md active:scale-95 transition-all flex items-center gap-1">
+              📸 บันทึกภาพ
+            </button>
+          </div>
+          <div id="capture-area" style="background:#fff;padding:16px;border-radius:16px;">
+            <h2 style="font-size:18px;font-weight:900;text-align:center;color:#1a202c;text-transform:uppercase;letter-spacing:-0.5px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px;">${test} Ranking</h2>
+
+            ${myData ? `
+            <div style="background:#2563eb;border-radius:16px;padding:16px;margin-bottom:16px;color:white;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                  <td style="vertical-align:middle;">
+                    <p style="font-size:10px;text-transform:uppercase;opacity:0.8;font-weight:700;letter-spacing:1px;margin:0;">อันดับของคุณ</p>
+                    <p style="font-size:28px;font-weight:500;margin:2px 0;color:white;">#${myIndex + 1} <span style="font-size:13px;font-weight:400;opacity:0.9;">/ ${sorted.length}</span></p>
+                  </td>
+                  <td style="text-align:right;vertical-align:middle;">
+                    <p style="font-size:10px;text-transform:uppercase;opacity:0.8;font-weight:700;letter-spacing:1px;margin:0;">คะแนนรวม</p>
+                    <p style="font-size:22px;font-weight:900;margin:2px 0;color:white;">${myScore.toFixed(2)}%</p>
+                  </td>
+                </tr>
+              </table>
+              <div style="margin-top:10px;background:rgba(255,255,255,0.2);height:6px;border-radius:99px;overflow:hidden;">
+                <div style="background:white;height:6px;width:${Math.min(myScore, 100)}%;border-radius:99px;"></div>
+              </div>
+              <p style="font-size:9px;margin-top:6px;opacity:0.9;font-style:italic;color:white;">
+                ${myScore >= 55 ? '🎉 ยินดีด้วย! คะแนนคุณผ่านเกณฑ์ร้อยละ 55 แล้ว' : `สู้ๆ! อีกเพียง ${(55 - myScore).toFixed(2)}% จะถึงเป้าหมายแล้ว`}
+              </p>
+            </div>` : ''}
+
+            <table style="margin:0 auto 12px auto;border-collapse:collapse;">
+              <tr>
+                <td style="padding:0 10px;"><table style="border-collapse:collapse;"><tr>
+                  <td style="padding-right:5px;vertical-align:middle;"><div style="width:10px;height:10px;border-radius:5px;background:#22c55e;"></div></td>
+                  <td style="font-size:11px;font-weight:700;color:#15803d;vertical-align:middle;">Top</td>
+                </tr></table></td>
+                <td style="padding:0 10px;"><table style="border-collapse:collapse;"><tr>
+                  <td style="padding-right:5px;vertical-align:middle;"><div style="width:10px;height:10px;border-radius:5px;background:#ef4444;"></div></td>
+                  <td style="font-size:11px;font-weight:700;color:#b91c1c;vertical-align:middle;">Min</td>
+                </tr></table></td>
+              </tr>
+            </table>
+
+            <div style="border-radius:16px;overflow:hidden;border:1px solid #f1f5f9;">
+              <table style="width:100%;border-collapse:collapse;background:white;table-layout:fixed;">
+                <thead>
+                  <tr style="background:#f8fafc;font-size:11px;color:#64748b;">
+                    <th style="padding:12px 8px;font-weight:700;text-transform:uppercase;text-align:left;width:22%;">ชื่อ</th>
+                    <th style="text-align:center;padding:4px 2px;">คณิต<br>(60)</th>
+                    <th style="text-align:center;padding:4px 2px;">วิทย์<br>(60)</th>
+                    <th style="text-align:center;padding:4px 2px;">อังกฤษ<br>(50)</th>
+                    <th style="text-align:center;padding:4px 2px;">ไทย<br>(40)</th>
+                    <th style="text-align:center;padding:4px 2px;">สังคม<br>(40)</th>
+                    <th style="text-align:right;padding:4px 8px;width:16%;">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${sorted.map((r, i) => {
+                    const isMe       = r[0] === currentUser;
+                    const displayName = isAdmin ? `${i+1}.${r[0]}` : (isMe ? '🌟 คุณ' : `${i+1}`);
+                    const rowBg      = isMe ? '#eff6ff' : (i % 2 === 0 ? '#ffffff' : '#fafafa');
+                    const getColor   = (score, col) => {
+                      const vals = filtered.map(r => parseFloat(r[col] || 0));
+                      const max  = Math.max(...vals); const min = Math.min(...vals);
+                      if (score === max && max !== min) return '#16a34a';
+                      if (score === min && max !== min) return '#dc2626';
+                      return '#64748b';
+                    };
+                    return `
+                      <tr style="background:${rowBg};border-top:1px solid #f1f5f9;font-size:12px;">
+                        <td style="padding:10px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:${isMe?'#2563eb':'#374151'};font-weight:${isMe?'900':'400'};">${displayName}</td>
+                        <td style="text-align:center;color:${getColor(parseFloat(r[1]),1)};font-weight:${getColor(parseFloat(r[1]),1)!=='#64748b'?'900':'400'};">${parseFloat(r[1]).toFixed(0)}</td>
+                        <td style="text-align:center;color:${getColor(parseFloat(r[2]),2)};font-weight:${getColor(parseFloat(r[2]),2)!=='#64748b'?'900':'400'};">${parseFloat(r[2]).toFixed(0)}</td>
+                        <td style="text-align:center;color:${getColor(parseFloat(r[3]),3)};font-weight:${getColor(parseFloat(r[3]),3)!=='#64748b'?'900':'400'};">${parseFloat(r[3]).toFixed(0)}</td>
+                        <td style="text-align:center;color:${getColor(parseFloat(r[4]),4)};font-weight:${getColor(parseFloat(r[4]),4)!=='#64748b'?'900':'400'};">${parseFloat(r[4]).toFixed(0)}</td>
+                        <td style="text-align:center;color:${getColor(parseFloat(r[5]),5)};font-weight:${getColor(parseFloat(r[5]),5)!=='#64748b'?'900':'400'};">${parseFloat(r[5]).toFixed(0)}</td>
+                        <td style="text-align:;fright;padding-right:8pxont-weight:900;color:${isMe?'#2563eb':'#1e293b'};">${parseFloat(r[7]).toFixed(2)}</td>
+                      </tr>`;
+                  }).join('')}
+                </tbody>
+                <tfoot>
+                  <tr style="background:#60a5fa;color:white;font-size:11px;">
+                    <td style="padding:10px 8px;font-style:italic;text-transform:uppercase;">ค่าเฉลี่ยห้อง</td>
+                    <td style="text-align:center;">${getAvg(1)}</td>
+                    <td style="text-align:center;">${getAvg(2)}</td>
+                    <td style="text-align:center;">${getAvg(3)}</td>
+                    <td style="text-align:center;">${getAvg(4)}</td>
+                    <td style="text-align:center;">${getAvg(5)}</td>
+                    <td style="text-align:right;padding-right:8px;text-decoration:underline;font-weight:700;">${roomAvgTotal}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderAnswers() {
+      if (isAnswersLoaded) return;
+      const container = document.getElementById('answerList');
+      container.innerHTML = '<div class="py-10 text-center text-gray-400 text-xs">กำลังเตรียมข้อมูลเฉลย...</div>';
+
+      google.script.run
+        .withSuccessHandler(weeklyData => {
+          if (!weeklyData || weeklyData.length === 0) {
+            container.innerHTML = '<div class="py-10 text-center text-gray-400 text-xs">ยังไม่มีเฉลย</div>';
+            return;
+          }
+          isAnswersLoaded = true;
+          container.innerHTML = weeklyData.map((week, idx) => `
+            <div class="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm mb-3">
+              <button onclick="toggleAccordion(${idx}, 'answer')" class="w-full flex justify-between items-center p-4 bg-gray-50/50 hover:bg-blue-50 transition-colors">
+                <span class="font-bold text-gray-700 text-sm">${week.week}</span>
+                <span id="icon-${idx}" class="text-gray-400 text-[10px] transition-all duration-300">▼</span>
+              </button>
+              <div id="answer-content-${idx}" class="accordion-content-wrapper divide-y divide-gray-50">
+                <div class="p-1">
+                  ${week.subjects.map(s => {
+                    const isRead = readFilesList.includes(s.name);
+                    return `
+                      <div class="flex justify-between items-center p-4">
+                        <div class="flex items-center gap-2">
+                          <div class="w-1.5 h-1.5 rounded-full ${isRead ? 'bg-green-400' : 'bg-red-400'}"></div>
+                          <span class="text-sm text-gray-600 font-medium">${s.name}</span>
+                        </div>
+                        <button onclick="previewPDF('${s.url}', \`${s.name}\`, this)"
+                          class="${isRead ? 'btn-read' : 'bg-red-50 text-red-600 border-red-100'} text-[10px] font-bold px-4 py-2 rounded-xl border transition-all">
+                          ${isRead ? 'อ่านแล้ว' : 'อ่านเฉลย'}
+                        </button>
+                      </div>`;
+                  }).join('')}
+                </div>
+              </div>
+            </div>`).join('');
+        })
+        .getWeeklyPDFs();
+    }
+
+    function previewPDF(url, title, btnElement) {
+      google.script.run.writeLog(currentUser, "เปิดดูเฉลย", title);
+      if (!readFilesList.includes(title)) readFilesList.push(title);
+      if (btnElement) {
+        btnElement.className = "btn-read text-[10px] font-bold px-4 py-2 rounded-xl border transition-all";
+        btnElement.innerText = 'อ่านแล้ว';
+        const dot = btnElement.parentElement.querySelector('.rounded-full');
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-green-400";
+      }
+      const previewUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
+      Swal.fire({
+        title: `<span class="text-lg font-bold">${title}</span>`,
+        html: `
+          <iframe src="${previewUrl}" width="100%" height="500px" style="border:none;border-radius:12px;"></iframe>
+          <a href="${url}" target="_blank" style="display:block;margin-top:12px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;font-weight:700;padding:12px;border-radius:12px;text-decoration:none;font-size:13px;">📂 เปิดใน Google Drive </a>`,
+        width: '95%', showCloseButton: true, showConfirmButton: false
+      });
+    }
+
+    // ─── [แก้ไข] renderVideos — แสดง % แยกแต่ละคลิป + นับ x/y เฉพาะวิดีโอ ───
+    function renderVideos() {
+      if (isVideosLoaded) return;
+
+      const container = document.getElementById('videoList');
+      container.innerHTML = `
+        <div class="col-span-full py-20 text-center">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent mb-4"></div>
+          <p class="text-gray-500 font-bold animate-pulse">กำลังโหลดบทเรียน...</p>
+        </div>`;
+
+      google.script.run
+        .withSuccessHandler(videoData => {
+          google.script.run
+            .withSuccessHandler(progress => {
+              studentProgress = progress;
+
+              if (!videoData || videoData.length === 0) {
+                container.innerHTML = `
+                  <div class="w-full flex flex-col items-center justify-center py-16 px-4 bg-white/50 backdrop-blur-sm rounded-[2rem] border-2 border-dashed border-gray-200 shadow-inner">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6 animate-bounce"><span class="text-4xl">📚</span></div>
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">ยังไม่มีบทเรียนในส่วนนี้</h3>
+                    <p class="text-gray-500 text-sm text-center max-w-xs">คุณครูกำลังเตรียมเนื้อหาให้ ใจเย็นๆ นะครับ 😊</p>
+                  </div>`;
+                return;
+              }
+
+              isVideosLoaded = true;
+
+              const groups = videoData.reduce((acc, obj) => {
+                if (!acc[obj.parentTitle]) acc[obj.parentTitle] = [];
+                acc[obj.parentTitle].push(obj);
+                return acc;
+              }, {});
+
+              container.innerHTML = Object.keys(groups).map((groupName, idx) => {
+                const items = groups[groupName];
+
+                // ── [แก้ไข] นับเฉพาะ item ที่เป็น video ──
+                const videoItems     = items.filter(item => item.type.toLowerCase().includes('video'));
+                const completedVideos = videoItems.filter(item =>
+                  progress.includes(`${item.lessonId}-${item.subTitle.trim()}`)
+                ).length;
+                const totalVideos    = videoItems.length;
+
+                // % ของกลุ่ม (คิดจากวิดีโอทั้งหมดในกลุ่ม)
+                const percent = totalVideos > 0
+                  ? Math.round((completedVideos / totalVideos) * 100)
+                  : 0;
+
+                // นับ index ของวิดีโอแต่ละตัวในกลุ่ม
+                let videoIndexInGroup = 0;
+
+                return `
+                  <div class="insta-card overflow-hidden w-full mb-4" style="border:none;">
+                    <div onclick="toggleAccordion(${idx}, 'video')" style="
+                      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                      padding: 18px 20px; cursor:pointer; transition: filter 0.2s;"
+                      onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+                      <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="flex:1;">
+                          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                            <div style="background:rgba(79,172,254,0.2);border-radius:8px;padding:5px 10px;">
+                              <span style="font-size:10px;font-weight:700;color:#4facfe;text-transform:uppercase;letter-spacing:1px;">บทเรียน</span>
+                            </div>
+                            <!-- [แก้ไข] แสดงเฉพาะจำนวนวิดีโอ -->
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5);">
+                              ${totalVideos > 0 ? `${completedVideos}/${totalVideos} วิดีโอเสร็จแล้ว` : 'ไม่มีคลิปวิดีโอ'}
+                            </span>
+                          </div>
+                          <h3 style="font-weight:700;font-size:15px;color:white;margin:0 0 12px;">${groupName}</h3>
+                          <div style="background:rgba(255,255,255,0.1);height:5px;border-radius:99px;overflow:hidden;">
+                            <div style="background:linear-gradient(to right,#4facfe,#00f2fe);height:100%;width:${percent}%;border-radius:99px;transition:width 1s ease;"></div>
+                          </div>
+                        </div>
+                        <div style="margin-left:16px;text-align:center;">
+                          <div style="width:44px;height:44px;border-radius:50%;background:${percent===100?'rgba(34,197,94,0.2)':'rgba(79,172,254,0.15)'};display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
+                            <span style="font-size:13px;font-weight:700;color:${percent===100?'#22c55e':'#4facfe'};">${percent}%</span>
+                          </div>
+                          <svg id="arrow-${idx}" style="width:16px;height:16px;color:rgba(255,255,255,0.4);transition:transform 0.3s;margin:0 auto;display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="content-${idx}" class="accordion-content-wrapper" style="background:#fafbff;">
+                      <div style="padding:10px;">
+                        ${items.map((item) => {
+                          const cleanTitle    = item.subTitle.trim();
+                          const isDone        = progress.includes(`${item.lessonId}-${cleanTitle}`);
+                          const isVideo       = item.type.toLowerCase().includes('video');
+
+                          // ── [แก้ไข] นับ index เฉพาะวิดีโอ และคำนวณ % แต่ละคลิป ──
+                          let clipLabel = '';
+                          let clipPct   = '';
+                          if (isVideo) {
+                            videoIndexInGroup++;
+                            const pct = isDone ? 100 : 0; // 0% = ยังไม่ดู, 100% = ดูแล้ว
+                            clipLabel = `${videoIndexInGroup}/${totalVideos}`;
+                            clipPct   = `${pct}%`;
+                          }
+
+                          const btnText       = isDone ? '✓ เสร็จแล้ว' : (isVideo ? '▶ เข้าเรียน' : '📄 ดูชีท');
+                          const onclickAction = isVideo
+                            ? `handleAccess('${item.lessonId}', \`${cleanTitle}\`, '${item.url}', '${item.password}', true)`
+                            : `handleAccess('${item.lessonId}', \`${cleanTitle}\`, '${item.url}', '${item.password}', false)`;
+
+                          return `
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:14px;background:white;margin-bottom:6px;border:1.5px solid ${isDone?'#bbf7d0':'#f1f5f9'};transition:all 0.2s;"
+                              onmouseover="this.style.borderColor='#4facfe';this.style.boxShadow='0 2px 8px rgba(79,172,254,0.12)'"
+                              onmouseout="this.style.borderColor='${isDone?'#bbf7d0':'#f1f5f9'}';this.style.boxShadow='none'">
+                              <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+                                <!-- Icon -->
+                                <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                                  background:${isDone?'#f0fdf4':isVideo?'#eff6ff':'#f5f3ff'};">
+                                  <span style="font-size:16px;">${isDone ? '✅' : isVideo ? '🎬' : '📄'}</span>
+                                </div>
+                                <div style="min-width:0;flex:1;">
+                                  <p style="font-size:13px;font-weight:600;color:#1e293b;margin:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${cleanTitle}</p>
+                                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                                    ${item.duration ? `<span style="font-size:10px;color:#94a3b8;">${item.duration}</span>` : ''}
+                                    ${isVideo ? `
+                                      <!-- [แก้ไข] แสดง x/y และ % แยกแต่ละคลิป -->
+                                      <span style="font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 5px;">คลิป ${clipLabel}</span>
+                                      <span style="font-size:10px;font-weight:700;color:${isDone?'#16a34a':'#0ea5e9'};background:${isDone?'#f0fdf4':'#eff6ff'};border-radius:4px;padding:1px 6px;">${clipPct}</span>
+                                    ` : ''}
+                                  </div>
+                                  ${isVideo ? `
+                                    <div style="margin-top:5px;background:#e2e8f0;height:3px;border-radius:99px;overflow:hidden;width:100%;">
+                                      <div style="height:100%;width:${isDone?'100':'0'}%;background:${isDone?'#22c55e':'#4facfe'};border-radius:99px;transition:width 0.6s ease;"></div>
+                                    </div>` : ''}
+                                </div>
+                              </div>
+                              <button onclick="${onclickAction}" style="
+                                padding:7px 14px;border-radius:10px;font-family:'Kanit',sans-serif;font-size:11px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;margin-left:10px;transition:all 0.2s;
+                                ${isDone
+                                  ? 'background:#f0fdf4;color:#16a34a;cursor:default;'
+                                  : 'background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;box-shadow:0 3px 8px rgba(79,172,254,0.3);'}">
+                                ${btnText}
+                              </button>
+                            </div>`;
+                        }).join('')}
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('');
+            })
+            .getStudentProgress(currentUser);
+        })
+        .getVideoData();
+    }
+
+    function toggleAccordion(idx, type) {
+      const contentId = type === 'video' ? `content-${idx}` : `answer-content-${idx}`;
+      const arrowId   = type === 'video' ? `arrow-${idx}`   : `icon-${idx}`;
+      const content   = document.getElementById(contentId);
+      const arrow     = document.getElementById(arrowId);
+      if (!content) return;
+
+      const isOpen = content.classList.contains('is-open');
+      content.classList.toggle('is-open', !isOpen);
+
+      if (type === 'video') {
+        arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+      } else {
+        arrow.innerText = isOpen ? '▼' : '▲';
+        arrow.classList.toggle('text-blue-500', !isOpen);
+      }
+    }
+
+    function handleAccess(id, title, url, pass, isVideo) {
+      const hasPass = pass && pass.toString().trim() !== "" && pass.toString() !== "0";
+      const proceed = () => {
+        if (isVideo) {
+          openVideoPlayer(id, title, url);
+        } else {
+          const previewUrl = url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
+          Swal.fire({
+            title: `<span class="text-lg font-bold">${title}</span>`,
+            html: `
+              <iframe src="${previewUrl}" width="100%" height="480px" style="border:none;border-radius:12px;" onerror="this.style.display='none'"></iframe>
+              <a href="${url}" target="_blank" style="display:block;margin-top:12px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;font-weight:700;padding:12px;border-radius:12px;text-decoration:none;font-size:13px;">
+                📂 เปิดใน Google Drive
+              </a>`,
+            width: '95%', showCloseButton: true, showConfirmButton: false
+          });
+        }
+      };
+
+      if (!hasPass) {
+        proceed();
+      } else {
+        Swal.fire({ title: 'กรุณากรอกรหัสผ่าน', input: 'text', showCancelButton: true })
+          .then(res => {
+            if (res.value === pass.toString()) proceed();
+            else if (res.value) Swal.fire('รหัสผ่านไม่ถูกต้อง', '', 'error');
+          });
+      }
+    }
+
+    function openVideoPlayer(id, title, url) {
+      const videoId  = extractVideoId(url);
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1`;
+
+      Swal.fire({
+        title: `<span class="text-lg font-bold">${title}</span>`,
+        html: `
+          <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+            <iframe id="yt-player" width="100%" height="100%" src="${embedUrl}"
+              frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <div style="margin-top:12px;background:#f8faff;border-radius:12px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:#64748b;">ความคืบหน้า</span>
+              <span id="watch-pct" style="font-size:11px;font-weight:700;color:#4facfe;">0%</span>
+            </div>
+            <div style="background:#e2e8f0;height:5px;border-radius:99px;overflow:hidden;">
+              <div id="watch-bar" style="background:linear-gradient(to right,#4facfe,#00f2fe);height:100%;width:0%;border-radius:99px;transition:width 0.5s ease;"></div>
+            </div>
+            <p id="watch-msg" style="font-size:10px;color:#94a3b8;margin:6px 0 0;text-align:center;">ดูวิดีโอให้ครบ 80% เพื่อบันทึกความคืบหน้า</p>
+          </div>`,
+        width: '90%', showConfirmButton: false, showCloseButton: true,
+        didOpen: () => {
+          let marked = false;
+          let pollInterval = null;
+
+          const player = new YT.Player('yt-player', {
+            events: {
+              onReady: () => {
+                pollInterval = setInterval(() => {
+                  try {
+                    const current  = player.getCurrentTime();
+                    const duration = player.getDuration();
+                    if (!duration) return;
+
+                    const pct = Math.round((current / duration) * 100);
+                    document.getElementById('watch-pct').textContent = pct + '%';
+                    document.getElementById('watch-bar').style.width  = pct + '%';
+
+                    if (pct >= 80 && !marked) {
+                      marked = true;
+                      document.getElementById('watch-msg').textContent  = '✅ บันทึกความคืบหน้าแล้ว!';
+                      document.getElementById('watch-msg').style.color  = '#22c55e';
+                      document.getElementById('watch-pct').style.color  = '#22c55e';
+                      document.getElementById('watch-bar').style.background = '#22c55e';
+                      google.script.run
+                        .withSuccessHandler(() => { isVideosLoaded = false; renderVideos(); })
+                        .markVideoAsComplete(currentUser, id, title);
+                    }
+                  } catch(e) {}
+                }, 2000);
+              },
+              onStateChange: event => {
+                if (event.data === YT.PlayerState.ENDED && !marked) {
+                  marked = true;
+                  document.getElementById('watch-msg').textContent = '✅ บันทึกความคืบหน้าแล้ว!';
+                  document.getElementById('watch-msg').style.color = '#22c55e';
+                  google.script.run
+                    .withSuccessHandler(() => {
+                      Swal.fire({ icon: 'success', title: 'เยี่ยมมาก! 🎉', text: 'บันทึกการเรียนบทนี้แล้ว', timer: 1500, showConfirmButton: false });
+                      isVideosLoaded = false;
+                      renderVideos();
+                    })
+                    .markVideoAsComplete(currentUser, id, title);
+                }
+              }
+            }
+          });
+
+          Swal.getPopup().addEventListener('click', e => {
+            if (e.target.classList.contains('swal2-close')) {
+              if (pollInterval) clearInterval(pollInterval);
+            }
+          });
+        }
+      });
+    }
+
+    function extractVideoId(url) {
+      const match = url.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+      return match && match[2].length === 11 ? match[2] : null;
+    }
+
+    function submitQuestion() {
+      const msg = document.getElementById('questionInput').value.trim();
+      if (!msg) return;
+      Swal.fire({ title: 'กำลังส่ง...', didOpen: () => Swal.showLoading() });
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById('questionInput').value = "";
+          isQALoaded = false;
+          renderQA();
+          Swal.fire({ icon: 'success', title: 'ส่งคำถามสำเร็จ!', timer: 1500, showConfirmButton: false });
+        })
+        .submitQuestionToServer(currentUser, msg);
+    }
+
+    function renderQA() {
+      if (isQALoaded) return;
+      const container = document.getElementById('qa-history');
+      container.innerHTML = '<p class="text-center text-gray-400 text-xs py-10">กำลังโหลดคำถาม...</p>';
+      google.script.run
+        .withSuccessHandler(qaList => {
+          isQALoaded = true;
+          if (!qaList || qaList.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-400 text-xs py-10">ยังไม่มีประวัติการถาม</p>';
+            return;
+          }
+          container.innerHTML = qaList.map(item => `
+            <div class="bg-white p-4 rounded-2xl border border-gray-50 shadow-sm">
+              <div class="text-[10px] text-gray-400 mb-2 font-bold uppercase">${item.date}</div>
+              <p class="text-sm text-gray-700 mb-3 font-medium">❓ ${item.question}</p>
+              <div class="pl-4 border-l-2 border-green-400 bg-green-50/30 p-3 rounded-r-xl">
+                <p class="text-[10px] text-green-600 font-bold mb-1">ครูผู้สอนตอบ:</p>
+                <p class="text-sm text-gray-800 font-bold">${item.answer}</p>
+              </div>
+            </div>`).join('');
+        })
+        .getMyQA(currentUser);
+    }
+
+    function downloadScoreImage(btn) {
+      const area = document.getElementById('capture-area');
+      btn.innerHTML = "⌛...";
+      btn.disabled  = true;
+      html2canvas(area, { scale: 3, backgroundColor: "#ffffff", logging: false }).then(canvas => {
+        const link      = document.createElement('a');
+        link.download   = 'My-Ranking.png';
+        link.href       = canvas.toDataURL("image/png");
+        link.click();
+        btn.innerHTML   = "📸 บันทึกภาพ";
+        btn.disabled    = false;
+      });
+    }
+
+    function downloadIndividualImage(btn) {
+      const area = document.getElementById('capture-individual');
+      btn.innerHTML = "⌛...";
+      btn.disabled  = true;
+      html2canvas(area, { scale: 3, backgroundColor: "#ffffff", logging: false, useCORS: true }).then(canvas => {
+        const name    = document.querySelector('#capture-individual h2')?.innerText || 'Report';
+        const link    = document.createElement('a');
+        link.download = `Report-${name}.png`;
+        link.href     = canvas.toDataURL("image/png");
+        link.click();
+        btn.innerHTML = "📸 บันทึกภาพ";
+        btn.disabled  = false;
+      });
+    }
+  </script>
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
