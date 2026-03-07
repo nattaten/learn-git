@@ -51,54 +51,97 @@
     }
     .login-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79,172,254,0.12); background: white; }
 
+    /* ── Top bar ── */
     .nav-bar {
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(16px);
       position: sticky; top: 0; z-index: 50;
       border-bottom: 1px solid rgba(255,255,255,0.5);
       box-shadow: 0 2px 12px rgba(79,172,254,0.08);
     }
 
-    .nav-pill-wrap {
-      display: flex;
-      gap: 5px;
-      background: #f0f5ff;
-      padding: 5px;
-      border-radius: 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
+    /* ── FAB overlay ── */
+    .fab-overlay {
+      position: fixed; inset: 0; z-index: 98;
+      background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(6px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
     }
-    .nav-pill-wrap::-webkit-scrollbar { display: none; }
+    .fab-overlay.open { opacity: 1; pointer-events: all; }
 
-    .nav-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 7px 12px;
-      border: none;
-      border-radius: 11px;
-      font-family: 'Kanit', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
+    /* ── FAB menu ── */
+    .fab-menu {
+      position: fixed; right: 20px; bottom: 90px;
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 10px;
+      z-index: 99; pointer-events: none;
+    }
+    .fab-menu-row {
+      display: flex; align-items: center; gap: 10px;
+      transform: translateY(16px) scale(0.85);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .fab-menu.open .fab-menu-row { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+    .fab-menu.open .fab-menu-row:nth-child(1) { transition-delay: 0.04s; }
+    .fab-menu.open .fab-menu-row:nth-child(2) { transition-delay: 0.08s; }
+    .fab-menu.open .fab-menu-row:nth-child(3) { transition-delay: 0.12s; }
+    .fab-menu.open .fab-menu-row:nth-child(4) { transition-delay: 0.16s; }
+    .fab-menu.open .fab-menu-row:nth-child(5) { transition-delay: 0.20s; }
+    .fab-menu.open .fab-menu-row:nth-child(6) { transition-delay: 0.24s; }
+    .fab-menu.open .fab-menu-row:nth-child(7) { transition-delay: 0.28s; }
+    .fab-menu.open .fab-menu-row:nth-child(8) { transition-delay: 0.32s; }
+
+    .fab-label {
+      background: white; color: #1e293b;
+      padding: 7px 16px; border-radius: 99px;
+      font-size: 12px; font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
       white-space: nowrap;
-      transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1);
-      background: transparent;
-      color: #94a3b8;
-      position: relative;
     }
-    .nav-btn .nav-icon { font-size: 13px; }
-    .nav-btn.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary-end));
-      color: white;
-      box-shadow: 0 3px 10px rgba(79,172,254,0.4);
-      transform: scale(1.04);
+    .fab-icon-btn {
+      width: 48px; height: 48px; border-radius: 14px;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: transform 0.2s; position: relative; flex-shrink: 0;
     }
-    .nav-btn:not(.active):hover {
-      background: white;
-      color: var(--primary);
-      transform: scale(1.02);
+    .fab-icon-btn:hover { transform: scale(1.1); }
+    .fab-icon-btn.active { outline: 3px solid white; outline-offset: 2px; }
+    .fab-dot { position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; background: #ef4444; border-radius: 50%; border: 2px solid white; }
+
+    /* ── FAB button ── */
+    .fab-btn {
+      position: fixed; right: 20px; bottom: 24px;
+      width: 58px; height: 58px; border-radius: 18px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 8px 28px rgba(79,172,254,0.5);
+      z-index: 100;
+      transition: all 0.35s cubic-bezier(0.34,1.4,0.64,1);
     }
+    .fab-btn.open { transform: rotate(45deg) scale(1.05); background: linear-gradient(135deg,#ef4444,#f97316); box-shadow: 0 8px 28px rgba(239,68,68,0.45); }
+    .fab-btn:hover:not(.open) { transform: scale(1.08); }
+
+    /* ── Current page bottom bar ── */
+    .current-page-bar {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 -4px 20px rgba(79,172,254,0.08);
+      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 49;
+    }
+    .current-page-info { display: flex; align-items: center; gap: 10px; }
+    .current-page-icon { font-size: 22px; }
+    .current-page-name { font-size: 15px; font-weight: 900; color: #1e293b; }
+    .current-page-sub  { font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
     .score-badge {
       background: white;
@@ -150,26 +193,98 @@
     }
     .fade-up { animation: fadeUp 0.3s ease forwards; }
 
-    /* ── [แก้ไข] ความหนาตัวเลขนับถอยหลัง ── */
     .countdown-num {
-      font-size: 2.5rem;      /* ขนาดตัวเลข */
-      font-weight: 700;       /* ← หนาสุด */
+      font-size: 2.5rem;
+      font-weight: 700;
       line-height: 1;
       letter-spacing: -1px;
     }
     .countdown-sep {
       font-size: 2rem;
-      font-weight: 700;       /* ← หนาสุด */
+      font-weight: 700;
       margin-bottom: 1rem;
     }
     .countdown-label {
       font-size: 10px;
-      font-weight: 700;       /* ← หนากว่าเดิม (เดิมเป็น bold=700) */
+      font-weight: 700;
       opacity: 0.85;
       margin-top: 3px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
+
+    /* ── Notification styles ── */
+    .notif-item {
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1.5px solid #e8f0fe;
+      background: white;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .notif-item:hover { border-color: var(--primary); transform: translateX(3px); }
+    .notif-item.unread { background: #f0f7ff; border-color: #bfdbfe; }
+    .notif-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; flex-shrink: 0; }
+    .notif-dot.read { background: #d1d5db; }
+
+    /* ── Schedule styles ── */
+    .schedule-day {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1.5px solid #e8f0fe;
+      background: white;
+      margin-bottom: 10px;
+    }
+    .schedule-day-header {
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .schedule-item {
+      padding: 12px 16px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .schedule-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      white-space: nowrap;
+      min-width: 70px;
+      padding-top: 2px;
+    }
+    .schedule-dot-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+    }
+    .schedule-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .schedule-line { width: 2px; flex: 1; min-height: 20px; background: #e2e8f0; margin-top: 4px; }
+
+    /* ── Admin Dashboard styles ── */
+    .admin-stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1.5px solid #e8f0fe;
+      text-align: center;
+    }
+    .admin-stat-num { font-size: 28px; font-weight: 900; line-height: 1.1; }
+    .admin-stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-top: 4px; }
+
+    /* ── Pulse animation for notification badge ── */
+    @keyframes pulse-ring {
+      0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      70%  { transform: scale(1);    box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+    }
+    .badge-pulse { animation: pulse-ring 2s infinite; }
   </style>
 </head>
 <body>
@@ -200,42 +315,88 @@
   <!-- ── Main Content ── -->
   <div id="main-content" class="hidden">
 
-    <nav class="nav-bar px-4 pt-4 pb-3 mb-5">
-      <div class="max-w-md mx-auto">
-        <div class="flex justify-between items-center mb-3">
-          <h1 style="font-size:20px;font-weight:900;background:linear-gradient(135deg,#4facfe,#00f2fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Qtutor</h1>
-          <button onclick="handleLogout()" style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#ef4444;background:none;border:none;cursor:pointer;font-family:'Kanit',sans-serif;">
-            ออกจากระบบ
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-          </button>
-        </div>
-        <div class="nav-pill-wrap">
-          <button onclick="showSection('individual')" id="btn-indiv" class="nav-btn active">
-            <span class="nav-icon">📊</span>ของฉัน
-          </button>
-          <button onclick="showSection('overview')" id="btn-over" class="nav-btn">
-            <span class="nav-icon">🏆</span>อันดับ
-          </button>
-          <button onclick="showSection('answers')" id="btn-answers" class="nav-btn">
-            <span class="nav-icon">📖</span>เฉลย
-          </button>
-          <button onclick="showSection('videos')" id="btn-videos" class="nav-btn">
-            <span class="nav-icon">🎬</span>เรียน
-          </button>
-          <button onclick="showSection('qa')" id="btn-qa" class="nav-btn" style="position:relative;">
-            <span class="nav-icon">💬</span>Q&A
-            <span id="qa-badge" class="hidden" style="position:absolute;top:3px;right:3px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid white;"></span>
+    <!-- Top bar: Logo + Username + Logout -->
+    <nav class="nav-bar px-4 py-3 mb-5">
+      <div class="max-w-md mx-auto flex justify-between items-center">
+        <h1 style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#4facfe,#00f2fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Qtutor</h1>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <!-- Username chip -->
+          <div id="user-chip" style="background:#f0f5ff;border:1.5px solid #bfdbfe;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;color:#2563eb;">👤 —</div>
+          <!-- Logout -->
+          <button onclick="handleLogout()" style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#ef4444;background:none;border:none;cursor:pointer;font-family:'Kanit',sans-serif;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           </button>
         </div>
       </div>
     </nav>
 
-    <main class="max-w-md mx-auto px-4 pb-10">
+    <!-- FAB Overlay (closes menu on tap outside) -->
+    <div class="fab-overlay" id="fab-overlay" onclick="closeFAB()"></div>
+
+    <!-- FAB Menu (stacked rows, bottom-right) -->
+    <div class="fab-menu" id="fab-menu">
+      <!-- Admin only — hidden by default -->
+      <div class="fab-menu-row hidden" id="fab-row-admin" onclick="selectSection('admin','⚙️','Admin Dashboard','Admin')">
+        <div class="fab-label">Admin Dashboard</div>
+        <button class="fab-icon-btn" style="background:#1e293b;">⚙️</button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('notifications','🔔','การแจ้งเตือน','Notifications')">
+        <div class="fab-label">การแจ้งเตือน</div>
+        <button class="fab-icon-btn" id="fab-btn-notif" style="background:#f59e0b;">🔔
+          <div class="fab-dot hidden" id="notif-count-badge"></div>
+        </button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('qa','💬','ถาม-ตอบ','Q&A')">
+        <div class="fab-label">ถาม-ตอบ Q&A</div>
+        <button class="fab-icon-btn" id="fab-btn-qa" style="background:#10b981;">💬
+          <div class="fab-dot hidden" id="qa-badge"></div>
+        </button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('schedule','📅','ตารางเรียน','Schedule')">
+        <div class="fab-label">ตารางเรียน</div>
+        <button class="fab-icon-btn" style="background:#8b5cf6;">📅</button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('videos','🎬','บทเรียนวิดีโอ','Video Lessons')">
+        <div class="fab-label">บทเรียนวิดีโอ</div>
+        <button class="fab-icon-btn" style="background:#ef4444;">🎬</button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('answers','📖','คลังเฉลย','Answer Bank')">
+        <div class="fab-label">คลังเฉลย</div>
+        <button class="fab-icon-btn" style="background:#3b82f6;">📖</button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('overview','🏆','อันดับห้อง','Class Ranking')">
+        <div class="fab-label">อันดับห้อง</div>
+        <button class="fab-icon-btn" style="background:#f59e0b;">🏆</button>
+      </div>
+      <div class="fab-menu-row" onclick="selectSection('individual','📊','Dashboard ของฉัน','My Scores')">
+        <div class="fab-label">Dashboard ของฉัน</div>
+        <button class="fab-icon-btn" id="fab-btn-indiv" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">📊</button>
+      </div>
+    </div>
+
+    <!-- FAB Button -->
+    <button class="fab-btn" id="fab-main-btn" onclick="toggleFAB()">☰</button>
+
+    <!-- Current Page Bottom Bar -->
+    <div class="current-page-bar">
+      <div class="current-page-info">
+        <div class="current-page-icon" id="cp-icon">📊</div>
+        <div>
+          <div class="current-page-name" id="cp-name">Dashboard ของฉัน</div>
+          <div class="current-page-sub" id="cp-sub">My Scores</div>
+        </div>
+      </div>
+    </div>
+
+    <main id="main-container" class="max-w-md mx-auto px-4" style="padding-bottom:80px;">
+
+      <!-- Individual Section -->
       <section id="individual-section">
         <div id="admin-selector-area"></div>
         <div id="indivContent"></div>
       </section>
 
+      <!-- Overview Section -->
       <section id="overview-section" class="hidden">
         <div class="insta-card p-5 mb-5 fade-up">
           <label class="text-[11px] font-bold text-gray-400 mb-2 block uppercase tracking-widest text-center">เลือกชุดการสอบ</label>
@@ -244,6 +405,7 @@
         <div id="overContent"></div>
       </section>
 
+      <!-- Answers Section -->
       <section id="answers-section" class="hidden">
         <div class="insta-card p-6 fade-up">
           <div class="section-header">
@@ -254,6 +416,39 @@
         </div>
       </section>
 
+      <!-- ── NEW: Schedule Section ── -->
+      <section id="schedule-section" class="hidden">
+        <div class="insta-card p-6 mb-4 fade-up">
+          <div class="section-header">
+            <h2>📅 ตารางเรียน</h2>
+            <p>คลาสและกิจกรรมที่กำลังจะมาถึง</p>
+          </div>
+          <div id="scheduleContent"></div>
+        </div>
+      </section>
+
+      <!-- ── NEW: Notifications Section ── -->
+      <section id="notifications-section" class="hidden">
+        <div class="insta-card p-6 mb-4 fade-up">
+          <div class="flex justify-between items-center mb-5">
+            <div>
+              <h2 style="font-size:20px;font-weight:900;color:#1e293b;">🔔 การแจ้งเตือน</h2>
+              <p style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;">Notifications</p>
+            </div>
+            <button onclick="markAllNotifsRead()" style="font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:'Kanit',sans-serif;">
+              อ่านทั้งหมด
+            </button>
+          </div>
+          <div id="notifList" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- ── NEW: Admin Dashboard Section ── -->
+      <section id="admin-section" class="hidden">
+        <div id="adminDashboard" class="fade-up"></div>
+      </section>
+
+      <!-- QA Section -->
       <section id="qa-section" class="hidden">
         <div class="insta-card p-6 mb-5 fade-up">
           <div class="section-header">
@@ -267,13 +462,13 @@
         </div>
         <div id="qa-history" class="space-y-4 pb-10"></div>
       </section>
-    </main>
 
-    <main id="main-container" class="max-w-md mx-auto px-4 pb-10">
+      <!-- Videos Section (ย้ายมาอยู่ใน main เดียวกัน) -->
       <section id="videos-section" class="hidden">
         <div id="video-dashboard" class="mb-6"></div>
-        <div id="videoList" class="flex flex-col gap-4 w-full max-w-3xl mx-auto"></div>
+        <div id="videoList" class="flex flex-col gap-4 w-full mx-auto"></div>
       </section>
+
     </main>
   </div>
 
@@ -283,12 +478,25 @@
     let isAdmin       = false;
     let readFilesList = [];
 
-    let isAnswersLoaded = false;
-    let isVideosLoaded  = false;
-    let isQALoaded      = false;
-    let studentProgress = [];
+    let isAnswersLoaded    = false;
+    let isVideosLoaded     = false;
+    let isQALoaded         = false;
+    let isScheduleLoaded   = false;
+    let isAdminLoaded      = false;
+    let studentProgress    = [];
 
-    window.onload = () => {
+    // ── Notifications store (in-memory) ──
+    let notifications = [];
+
+    window.addEventListener('load', initApp);
+
+    function initApp() {
+      // ใน Google Apps Script ไม่ต้องรอ window.onload
+      // เรียก getSheetData ตรงๆ ได้เลยหลัง DOM พร้อม
+      startLoadData();
+    }
+
+    function startLoadData() {
       const loadTimeout = setTimeout(() => {
         Swal.fire({
           icon: 'warning', title: 'โหลดข้อมูลช้า',
@@ -334,7 +542,7 @@
           }).then(() => location.reload());
         })
         .getSheetData();
-    };
+    }
 
     function populateLoginSelector() {
       const sel   = document.getElementById('loginName');
@@ -377,15 +585,556 @@
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-content').classList.remove('hidden');
 
-      isAdmin ? setupAdminView() : renderIndividual(currentUser);
+      // Set username chip
+      document.getElementById('user-chip').textContent = '👤 ' + currentUser;
+
+      if (isAdmin) {
+        document.getElementById('fab-row-admin').classList.remove('hidden');
+        setupAdminView();
+      } else {
+        renderIndividual(currentUser);
+      }
+
       renderAnswers();
       renderCountdown();
+      renderSchedule();
       checkQABadge();
+      generateNotifications();
 
-      if (!isAdmin) setInterval(checkQABadge, 30000);
+      if (!isAdmin) {
+        setInterval(checkQABadge, 30000);
+        setInterval(generateNotifications, 60000);
+      }
     }
 
-    // ─── [แก้ไข] ฟีเจอร์นับถอยหลัง — ใช้ class countdown-num/sep/label ──
+    // ─────────────────────────────────────────
+    // 🔔 NOTIFICATION SYSTEM
+    // ─────────────────────────────────────────
+    function generateNotifications() {
+      // ดึงประกาศจาก Server ก่อน แล้วค่อย merge กับ notification อื่น
+      google.script.run
+        .withSuccessHandler(annList => {
+          _buildNotifications(annList || []);
+        })
+        .withFailureHandler(() => _buildNotifications([]))
+        .getAnnouncements(currentUser);
+    }
+
+    function _buildNotifications(annList) {
+      if (isAdmin) return;
+      const newNotifs = [];
+
+      // ── ประกาศจาก Admin ──
+      const typeIcon = { info:'📢', warning:'⚠️', urgent:'🚨' };
+      annList.forEach(a => {
+        const key    = `ann_${a.rowIndex}`;
+        const isRead = !!localStorage.getItem(key);
+        newNotifs.push({
+          id: key, type: 'announcement',
+          icon: typeIcon[a.type] || '📢',
+          title: a.type === 'urgent' ? '🚨 ประกาศเร่งด่วน!' : a.type === 'warning' ? '⚠️ แจ้งเตือน' : '📢 ประกาศใหม่',
+          body: a.message,
+          time: a.date,
+          read: isRead,
+          action: null
+        });
+      });
+
+      // Check QA answers
+      google.script.run
+        .withSuccessHandler(qaList => {
+          qaList.forEach(item => {
+            if (item.answer && item.answer !== "รอครูผู้สอนตอบสักครู่...") {
+              const key = `qa_notif_${currentUser}_${item.date}`;
+              const isRead = !!localStorage.getItem(key);
+              newNotifs.push({
+                id: key,
+                type: 'qa',
+                icon: '💬',
+                title: 'ครูตอบคำถามแล้ว!',
+                body: item.question.length > 40 ? item.question.slice(0, 40) + '...' : item.question,
+                time: item.date,
+                read: isRead,
+                action: () => showSection('qa')
+              });
+            }
+          });
+
+          // Countdown warning notification
+          const EXAM_DATE = new Date('2026-03-28T08:00:00');
+          const daysLeft  = Math.floor((EXAM_DATE - new Date()) / (1000 * 60 * 60 * 24));
+          if (daysLeft >= 0 && daysLeft <= 30) {
+            const urgKey = `exam_warn_${daysLeft}`;
+            newNotifs.push({
+              id: urgKey,
+              type: 'exam',
+              icon: daysLeft <= 7 ? '🚨' : '⏳',
+              title: `เหลือเวลาอีก ${daysLeft} วัน!`,
+              body: 'ก่อนวันสอบเข้า ม.1 — เตรียมตัวให้พร้อมนะครับ 💪',
+              time: 'ระบบ',
+              read: !!localStorage.getItem(urgKey),
+              action: () => showSection('individual')
+            });
+          }
+
+          notifications = newNotifs;
+          updateNotifBadge();
+        })
+        .getMyQA(currentUser);
+    }
+
+    function updateNotifBadge() {
+      const unread = notifications.filter(n => !n.read).length;
+      const badge  = document.getElementById('notif-count-badge');
+      if (!badge) return;
+      if (unread > 0) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function renderNotifications() {
+      const container = document.getElementById('notifList');
+      if (notifications.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <p style="font-size:40px;margin-bottom:8px;">🔕</p>
+            <p class="text-gray-400 text-sm font-bold">ไม่มีการแจ้งเตือนตอนนี้</p>
+          </div>`;
+        return;
+      }
+      container.innerHTML = notifications.map(n => `
+        <div class="notif-item ${n.read ? '' : 'unread'} flex gap-3 items-start" onclick="readNotif('${n.id}', this, ${notifications.indexOf(n)})">
+          <div style="width:38px;height:38px;border-radius:10px;background:${n.type==='qa'?'#eff6ff':n.type==='exam'?'#fef2f2':'#f0fdf4'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;">
+            ${n.icon}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;">
+              <p style="font-size:13px;font-weight:700;color:#1e293b;margin:0;">${n.title}</p>
+              <span style="font-size:9px;color:#94a3b8;white-space:nowrap;">${n.time}</span>
+            </div>
+            <p style="font-size:11px;color:#64748b;margin:3px 0 0;">${n.body}</p>
+          </div>
+          <div class="notif-dot ${n.read ? 'read' : ''}" style="margin-top:5px;"></div>
+        </div>`).join('');
+    }
+
+    function readNotif(id, el, idx) {
+      try { localStorage.setItem(id, '1'); } catch(_) {}
+      notifications[idx].read = true;
+      el.classList.remove('unread');
+      el.querySelector('.notif-dot').classList.add('read');
+      updateNotifBadge();
+      if (notifications[idx].action) notifications[idx].action();
+    }
+
+    function markAllNotifsRead() {
+      notifications.forEach(n => {
+        n.read = true;
+        try { localStorage.setItem(n.id, '1'); } catch(_) {}
+      });
+      updateNotifBadge();
+      renderNotifications();
+    }
+
+    // ─────────────────────────────────────────
+    // 📅 SCHEDULE — ตารางจริง 15 ครั้ง
+    // ─────────────────────────────────────────
+    function renderSchedule() {
+      if (isScheduleLoaded) return;
+      isScheduleLoaded = true;
+
+      // ปี พ.ศ. 2569 = ค.ศ. 2026
+      const SCHEDULE = [
+        { num:1,  day:'เสาร์',   date:'2026-02-28', label:'เสาร์ที่ 28 ก.พ. 69',  type:'test',  testNo:'TEST 1', subjects:[], teachers:['ครูลิน','ครูบิว','ครูเท็น'] },
+        { num:2,  day:'อาทิตย์', date:'2026-03-01', label:'อาทิตย์ที่ 1 มี.ค. 69', type:'class', subjects:['ไทย+สังคม','อังกฤษ','วิทย์'], teachers:['ครูก้อย','ครูลิน','ครูบิว'] },
+        { num:3,  day:'เสาร์',   date:'2026-03-07', label:'เสาร์ที่ 7 มี.ค. 69',   type:'class', subjects:['อังกฤษ','วิทย์','ไทย+สังคม'], teachers:['ครูหญิง','ครูบิว','ครูก้อย'] },
+        { num:4,  day:'อาทิตย์', date:'2026-03-08', label:'อาทิตย์ที่ 8 มี.ค. 69', type:'test',  testNo:'TEST 2', subjects:[], teachers:['ครูก้อย','ครูบิว','ครูเท็น'] },
+        { num:5,  day:'อังคาร',  date:'2026-03-10', label:'อังคารที่ 10 มี.ค. 69', type:'class', subjects:['ไทย+สังคม','อังกฤษ','คณิต'], teachers:['ครูก้อย','ครูหญิง','อิ่มอุ่น'] },
+        { num:6,  day:'พฤหัส',   date:'2026-03-12', label:'พฤหัสที่ 12 มี.ค. 69',  type:'class', subjects:['ไทย+สังคม','วิทย์','คณิต'], teachers:['ครูก้อย','อู','อิ่มอุ่น'] },
+        { num:7,  day:'เสาร์',   date:'2026-03-14', label:'เสาร์ที่ 14 มี.ค. 69',  type:'test',  testNo:'TEST 3', subjects:[], teachers:['ครูลิน','ครูบิว','ครูเท็น'] },
+        { num:8,  day:'อาทิตย์', date:'2026-03-15', label:'อาทิตย์ที่ 15 มี.ค. 69',type:'class', subjects:['ไทย+สังคม','วิทย์','คณิต'], teachers:['ครูก้อย','ครูบิว','ครูเท็น'] },
+        { num:9,  day:'อังคาร',  date:'2026-03-17', label:'อังคารที่ 17 มี.ค. 69', type:'class', subjects:['ไทย+สังคม','อังกฤษ','คณิต'], teachers:['ครูก้อย','ครูหญิง','อิ่มอุ่น'] },
+        { num:10, day:'พฤหัส',   date:'2026-03-19', label:'พฤหัสที่ 19 มี.ค. 69',  type:'test',  testNo:'TEST 4', subjects:[], teachers:['ครูก้อย','อู','อิ่มอุ่น'] },
+        { num:11, day:'เสาร์',   date:'2026-03-21', label:'เสาร์ที่ 21 มี.ค. 69',  type:'class', subjects:['อังกฤษ','วิทย์','คณิต'], teachers:['ครูลิน','ครูบิว','ครูเท็น'] },
+        { num:12, day:'อาทิตย์', date:'2026-03-22', label:'อาทิตย์ที่ 22 มี.ค. 69',type:'class', subjects:['ไทย+สังคม','วิทย์','คณิต'], teachers:['ครูก้อย','ครูบิว','ครูเท็น'] },
+        { num:13, day:'อังคาร',  date:'2026-03-24', label:'อังคารที่ 24 มี.ค. 69', type:'test',  testNo:'TEST 5', subjects:[], teachers:['ครูก้อย','ครูหญิง','อู'] },
+        { num:14, day:'พุธ',     date:'2026-03-25', label:'พุธที่ 25 มี.ค. 69',    type:'class', subjects:['อังกฤษ','วิทย์','คณิต'], teachers:['ครูลิน','อู','อิ่มอุ่น'] },
+        { num:15, day:'พฤหัส',   date:'2026-03-26', label:'พฤหัสที่ 26 มี.ค. 69',  type:'test',  testNo:'TEST 6', subjects:[], teachers:['ครูก้อย','ครูหญิง','อู'] },
+      ];
+
+      const today      = new Date(); today.setHours(0,0,0,0);
+      const upcoming   = SCHEDULE.filter(s => new Date(s.date) >= today);
+      const container  = document.getElementById('scheduleContent');
+
+      if (upcoming.length === 0) {
+        container.innerHTML = `<div class="text-center py-10"><p style="font-size:32px;">🎉</p><p style="font-size:13px;font-weight:700;color:#64748b;margin-top:8px;">ครบทุกครั้งแล้ว! สู้ๆ นะครับ</p></div>`;
+        return;
+      }
+
+      // Subject color map
+      const subjectColor = { 'คณิต':'#3b82f6','วิทย์':'#10b981','อังกฤษ':'#f59e0b','ไทย':'#ec4899','สังคม':'#8b5cf6','ไทย+สังคม':'#ec4899' };
+      function getSubjectColor(sub) {
+        for (const [k,v] of Object.entries(subjectColor)) { if (sub.includes(k)) return v; }
+        return '#64748b';
+      }
+
+      container.innerHTML = upcoming.map(s => {
+        const isTest   = s.type === 'test';
+        const dateObj  = new Date(s.date);
+        const isToday  = dateObj.toDateString() === new Date().toDateString();
+        const isPast   = dateObj < today;
+
+        const headerBg    = isTest ? 'linear-gradient(135deg,#ef4444,#f87171)' : (isToday ? 'linear-gradient(135deg,#4facfe,#00f2fe)' : '#f8faff');
+        const headerColor = isTest || isToday ? 'white' : '#1e293b';
+        const borderColor = isTest ? '#fca5a5' : (isToday ? '#93c5fd' : '#e8f0fe');
+
+        return `
+          <div style="border-radius:16px;overflow:hidden;border:1.5px solid ${borderColor};margin-bottom:10px;background:white;${isPast?'opacity:0.5;':''}">
+            <!-- Header -->
+            <div style="background:${headerBg};padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="background:rgba(255,255,255,0.2);border-radius:8px;padding:4px 10px;">
+                  <span style="font-size:10px;font-weight:900;color:${isTest||isToday?'white':'#64748b'};letter-spacing:1px;">ครั้งที่ ${s.num}</span>
+                </div>
+                <div>
+                  <p style="font-size:13px;font-weight:500;color:${headerColor};margin:0;">${s.label}</p>
+                  ${isToday ? '<span style="font-size:9px;font-weight:700;background:rgba(255,255,255,0.3);color:white;padding:2px 8px;border-radius:99px;">📍 วันนี้</span>' : ''}
+                </div>
+              </div>
+              <div style="text-align:right;">
+                ${isTest
+                  ? `<div style="background:rgba(255,255,255,0.25);border-radius:8px;padding:5px 12px;"><span style="font-size:14px;font-weight:900;color:white;">🎯 ${s.testNo}</span></div>`
+                  : `<span style="font-size:10px;font-weight:700;background:#eff6ff;color:#2563eb;padding:3px 10px;border-radius:99px;">ติวข้อสอบ</span>`
+                }
+              </div>
+            </div>
+
+            <!-- Body -->
+            <div style="padding:12px 16px;">
+              ${isTest
+                ? `<div style="background:#fef2f2;border-radius:12px;padding:12px;text-align:center;border:1px dashed #fca5a5;">
+                    <p style="font-size:12px;font-weight:700;color:#ef4444;margin:0;">⏰ 09.00 – 16.00 น.</p>
+                    <p style="font-size:11px;color:#64748b;margin:4px 0 0;">เข้าสอบเสมือนจริง 5 วิชา / บ่ายเฉลย</p>
+                   </div>`
+                : `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:${isAdmin?'10':'0'}px;">
+                    ${s.subjects.map(sub => `
+                      <div style="background:${getSubjectColor(sub)}15;border:1.5px solid ${getSubjectColor(sub)}30;border-radius:8px;padding:5px 10px;">
+                        <span style="font-size:11px;font-weight:500;color:${getSubjectColor(sub)};">${sub}</span>
+                      </div>`).join('')}
+                   </div>`
+              }
+              ${isAdmin
+                ? `<div style="margin-top:8px;padding:8px 12px;background:#f0f5ff;border-radius:10px;border:1px solid #bfdbfe;">
+                    <p style="font-size:10px;font-weight:700;color:#3b82f6;margin:0 0 4px;text-transform:uppercase;letter-spacing:1px;">👨‍🏫 ครูผู้สอน</p>
+                    <p style="font-size:12px;font-weight:700;color:#1e293b;margin:0;">${s.teachers.join(' · ')}</p>
+                   </div>`
+                : ''
+              }
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ─────────────────────────────────────────
+    // ⚙️ ADMIN DASHBOARD
+    // ─────────────────────────────────────────
+    function renderAdminDashboard() {
+      const container = document.getElementById('adminDashboard');
+      if (isAdminLoaded && container.innerHTML.trim() !== '') return;
+      isAdminLoaded = true;
+      container.innerHTML = '<p class="text-center text-gray-400 text-xs py-10 font-bold">กำลังโหลด Dashboard...</p>';
+
+      const allStudents   = [...new Set(globalData.map(r => r[0]))];
+      const allTests      = [...new Set(globalData.map(r => r[8]))].sort();
+      const totalStudents = allStudents.length;
+      const totalTests    = allTests.length;
+
+      // Per-student average
+      const studentAvgs = allStudents.map(name => {
+        const rows   = globalData.filter(r => r[0] === name);
+        const avg    = rows.reduce((a, b) => a + parseFloat(b[7] || 0), 0) / rows.length;
+        return { name, avg: parseFloat(avg.toFixed(2)) };
+      }).sort((a, b) => b.avg - a.avg);
+
+      const passing      = studentAvgs.filter(s => s.avg >= 55).length;
+      const classAvg     = (studentAvgs.reduce((a, b) => a + b.avg, 0) / studentAvgs.length).toFixed(1);
+      const topStudent   = studentAvgs[0];
+      const lowestStudent = studentAvgs[studentAvgs.length - 1];
+
+      // Subject averages
+      const subjectAvgs = [
+        { name: 'คณิต',    col: 1, max: 60, color: '#3b82f6' },
+        { name: 'วิทย์',   col: 2, max: 60, color: '#10b981' },
+        { name: 'อังกฤษ', col: 3, max: 50, color: '#f59e0b' },
+        { name: 'ไทย',    col: 4, max: 40, color: '#ec4899' },
+        { name: 'สังคม',  col: 5, max: 40, color: '#8b5cf6' },
+      ].map(s => ({
+        ...s,
+        avg: (globalData.reduce((a, b) => a + parseFloat(b[s.col] || 0), 0) / globalData.length).toFixed(1),
+        pct: ((globalData.reduce((a, b) => a + parseFloat(b[s.col] || 0), 0) / globalData.length) / s.max * 100).toFixed(0)
+      }));
+
+      container.innerHTML = `
+        <div class="fade-up space-y-4">
+
+          <!-- Header -->
+          <div class="insta-card p-5" style="background:linear-gradient(135deg,#1e293b,#334155);border:none;">
+            <p style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">Admin Dashboard</p>
+            <h2 style="font-size:22px;font-weight:900;color:white;margin:0 0 4px;">ภาพรวมทั้งห้อง</h2>
+            <p style="font-size:11px;color:rgba(255,255,255,0.6);">ข้อมูลอัพเดตแบบเรียลไทม์จาก Google Sheets</p>
+          </div>
+
+          <!-- Stat Cards -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" style="color:#3b82f6;">${totalStudents}</div>
+              <div class="admin-stat-label">นักเรียนทั้งหมด</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" style="color:#10b981;">${totalTests}</div>
+              <div class="admin-stat-label">ครั้งที่สอบ</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" style="color:#f59e0b;">${classAvg}%</div>
+              <div class="admin-stat-label">เฉลี่ยทั้งห้อง</div>
+            </div>
+            <div class="admin-stat-card" style="background:${passing/totalStudents >= 0.7 ? '#f0fdf4' : '#fef2f2'};">
+              <div class="admin-stat-num" style="color:${passing/totalStudents >= 0.7 ? '#16a34a' : '#ef4444'};">${passing}/${totalStudents}</div>
+              <div class="admin-stat-label">ผ่านเกณฑ์ 55%</div>
+            </div>
+          </div>
+
+          <!-- Top / Bottom -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="admin-stat-card" style="border-color:#bbf7d0;background:#f0fdf4;">
+              <div style="font-size:22px;margin-bottom:4px;">🥇</div>
+              <div style="font-size:15px;font-weight:900;color:#166534;">${topStudent.name}</div>
+              <div style="font-size:20px;font-weight:700;color:#16a34a;">${topStudent.avg}%</div>
+              <div class="admin-stat-label">คะแนนสูงสุด</div>
+            </div>
+            <div class="admin-stat-card" style="border-color:#fecaca;background:#fef2f2;">
+              <div style="font-size:22px;margin-bottom:4px;">💪</div>
+              <div style="font-size:15px;font-weight:900;color:#991b1b;">${lowestStudent.name}</div>
+              <div style="font-size:20px;font-weight:700;color:#ef4444;">${lowestStudent.avg}%</div>
+              <div class="admin-stat-label">ต้องช่วยเพิ่ม</div>
+            </div>
+          </div>
+
+          <!-- Subject Breakdown -->
+          <div class="insta-card p-5">
+            <p style="font-size:13px;font-weight:900;color:#1e293b;margin-bottom:14px;">📊 คะแนนเฉลี่ยแยกวิชา</p>
+            <div class="space-y-3">
+              ${subjectAvgs.map(s => `
+                <div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:12px;font-weight:700;color:#374151;">${s.name} <span style="color:#9ca3af;font-weight:400;">(/${s.max})</span></span>
+                    <span style="font-size:12px;font-weight:700;color:${s.color};">${s.avg} <span style="font-size:10px;color:#94a3b8;">(${s.pct}%)</span></span>
+                  </div>
+                  <div style="background:#f1f5f9;height:8px;border-radius:99px;overflow:hidden;">
+                    <div style="background:${s.color};height:100%;width:${s.pct}%;border-radius:99px;transition:width 1s ease;"></div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>
+
+          <!-- Student Ranking List -->
+          <div class="insta-card p-5">
+            <p style="font-size:13px;font-weight:900;color:#1e293b;margin-bottom:14px;">🏆 อันดับนักเรียน (เฉลี่ยทุกครั้ง)</p>
+            <div class="space-y-2">
+              ${studentAvgs.map((s, i) => {
+                const pct = s.avg;
+                const barColor = pct >= 70 ? '#22c55e' : pct >= 55 ? '#f59e0b' : '#ef4444';
+                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`;
+                return `
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:${i<3?'#fafafa':'white'};border:1px solid #f1f5f9;">
+                    <span style="font-size:${i<3?'16':'12'}px;font-weight:700;min-width:24px;text-align:center;color:#374151;">${medal}</span>
+                    <span style="font-size:12px;font-weight:700;flex:1;color:#1e293b;">${s.name}</span>
+                    <div style="width:80px;background:#f1f5f9;height:6px;border-radius:99px;overflow:hidden;">
+                      <div style="background:${barColor};height:100%;width:${Math.min(pct,100)}%;border-radius:99px;"></div>
+                    </div>
+                    <span style="font-size:12px;font-weight:700;color:${barColor};min-width:42px;text-align:right;">${pct}%</span>
+                  </div>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- ── ส่งประกาศ ── -->
+          <div class="insta-card p-5">
+            <p style="font-size:13px;font-weight:900;color:#1e293b;margin-bottom:14px;">📢 ส่งประกาศถึงนักเรียน</p>
+
+            <!-- ข้อความ -->
+            <textarea id="ann-msg" rows="3" placeholder="พิมพ์ข้อความประกาศ..." style="width:100%;padding:12px;background:#f8faff;border:2px solid #e8f0fe;border-radius:12px;outline:none;font-family:'Kanit',sans-serif;font-size:13px;resize:none;margin-bottom:10px;transition:border 0.2s;box-sizing:border-box;"
+              onfocus="this.style.borderColor='#4facfe'" onblur="this.style.borderColor='#e8f0fe'"></textarea>
+
+            <!-- ประเภท + ส่งถึง -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+              <div>
+                <label style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px;">ประเภท</label>
+                <select id="ann-type" style="width:100%;padding:9px 12px;background:#f8faff;border:2px solid #e8f0fe;border-radius:10px;outline:none;font-family:'Kanit',sans-serif;font-size:12px;font-weight:700;color:#1e293b;cursor:pointer;">
+                  <option value="info">💬 ข้อมูลทั่วไป</option>
+                  <option value="warning">⚠️ แจ้งเตือน</option>
+                  <option value="urgent">🚨 เร่งด่วน</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px;">ส่งถึง</label>
+                <select id="ann-target" style="width:100%;padding:9px 12px;background:#f8faff;border:2px solid #e8f0fe;border-radius:10px;outline:none;font-family:'Kanit',sans-serif;font-size:12px;font-weight:700;color:#1e293b;cursor:pointer;">
+                  <option value="all">👥 ทุกคน</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- วันหมดอายุ -->
+            <div style="margin-bottom:12px;">
+              <label style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px;">⏰ วันหมดอายุ (ไม่บังคับ)</label>
+              <input type="date" id="ann-expiry" style="width:100%;padding:9px 12px;background:#f8faff;border:2px solid #e8f0fe;border-radius:10px;outline:none;font-family:'Kanit',sans-serif;font-size:12px;color:#1e293b;box-sizing:border-box;"
+                onfocus="this.style.borderColor='#4facfe'" onblur="this.style.borderColor='#e8f0fe'">
+            </div>
+
+            <button onclick="sendAnnouncement()" style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;font-family:'Kanit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(79,172,254,0.4);">
+              ส่งประกาศ 📨
+            </button>
+          </div>
+
+          <!-- ── ประกาศที่ส่งแล้ว ── -->
+          <div class="insta-card p-5">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <p style="font-size:13px;font-weight:900;color:#1e293b;margin:0;">📋 ประกาศที่ส่งแล้ว</p>
+              <button onclick="loadAllAnnouncements()" style="font-size:10px;font-weight:700;color:#2563eb;background:#eff6ff;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:'Kanit',sans-serif;">โหลด</button>
+            </div>
+            <div id="adminAnnList"><p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">กด "โหลด" เพื่อดูประกาศ</p></div>
+          </div>
+
+          <!-- ── Q&A ตอบในเว็บ ── -->
+          <div class="insta-card p-5">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <p style="font-size:13px;font-weight:900;color:#1e293b;margin:0;">💬 ตอบคำถามนักเรียน</p>
+              <button onclick="loadAdminQA()" style="font-size:10px;font-weight:700;color:white;background:linear-gradient(135deg,#4facfe,#00f2fe);border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:'Kanit',sans-serif;">โหลด</button>
+            </div>
+            <div id="adminQAList"><p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">กด "โหลด" เพื่อดูคำถาม</p></div>
+          </div>
+
+        </div>`;
+    }
+
+    // ── โหลดประกาศทั้งหมด (Admin) ──
+    function loadAllAnnouncements() {
+      const el = document.getElementById('adminAnnList');
+      el.innerHTML = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">กำลังโหลด...</p>';
+      google.script.run
+        .withSuccessHandler(list => {
+          if (!list || list.length === 0) {
+            el.innerHTML = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">ยังไม่มีประกาศ</p>';
+            return;
+          }
+          const typeStyle = {
+            info:    { bg:'#eff6ff', border:'#bfdbfe', color:'#2563eb', icon:'💬' },
+            warning: { bg:'#fffbeb', border:'#fde68a', color:'#d97706', icon:'⚠️' },
+            urgent:  { bg:'#fef2f2', border:'#fecaca', color:'#dc2626', icon:'🚨' },
+          };
+          el.innerHTML = list.map(a => {
+            const st = typeStyle[a.type] || typeStyle.info;
+            const targetLabel = a.target === 'all' ? '👥 ทุกคน' : `👤 ${a.target}`;
+            const activeLabel = a.active ? '<span style="color:#16a34a;font-weight:700;">● เปิด</span>' : '<span style="color:#ef4444;font-weight:700;">● ปิด</span>';
+            return `
+              <div style="background:${st.bg};border:1.5px solid ${st.border};border-radius:12px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                  <div style="flex:1;">
+                    <p style="font-size:12px;font-weight:700;color:${st.color};margin:0 0 4px;">${st.icon} ${a.message}</p>
+                    <p style="font-size:10px;color:#94a3b8;margin:0;">${targetLabel} · ${a.date} · หมดอายุ: ${a.expiry} · ${activeLabel}</p>
+                  </div>
+                  ${a.active ? `<button onclick="closeAnnouncement(${a.rowIndex})" style="flex-shrink:0;font-size:10px;font-weight:700;color:#ef4444;background:#fef2f2;border:1.5px solid #fecaca;border-radius:8px;padding:5px 10px;cursor:pointer;font-family:'Kanit',sans-serif;">ปิด</button>` : ''}
+                </div>
+              </div>`;
+          }).join('');
+        })
+        .getAllAnnouncements();
+    }
+
+    // ── ส่งประกาศใหม่ ──
+    function sendAnnouncement() {
+      const msg    = document.getElementById('ann-msg').value.trim();
+      const type   = document.getElementById('ann-type').value;
+      const target = document.getElementById('ann-target').value;
+      const expiry = document.getElementById('ann-expiry').value;
+      if (!msg) { Swal.fire({ icon:'warning', title:'กรุณาพิมพ์ข้อความ', timer:1500, showConfirmButton:false }); return; }
+      Swal.fire({ title:'กำลังส่ง...', allowOutsideClick:false, didOpen:() => Swal.showLoading() });
+      google.script.run
+        .withSuccessHandler(res => {
+          Swal.fire({ icon:'success', title:'ส่งประกาศแล้ว!', timer:1500, showConfirmButton:false });
+          document.getElementById('ann-msg').value = '';
+          document.getElementById('ann-expiry').value = '';
+          loadAllAnnouncements();
+        })
+        .withFailureHandler(e => Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:e.message }))
+        .saveAnnouncement(msg, type, target, expiry);
+    }
+
+    // ── ปิดประกาศ ──
+    function closeAnnouncement(rowIndex) {
+      google.script.run
+        .withSuccessHandler(() => loadAllAnnouncements())
+        .deleteAnnouncement(rowIndex);
+    }
+
+    // ── โหลด Q&A ทั้งหมด (Admin) ──
+    function loadAdminQA() {
+      const el = document.getElementById('adminQAList');
+      el.innerHTML = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">กำลังโหลด...</p>';
+      google.script.run
+        .withSuccessHandler(list => {
+          if (!list || list.length === 0) {
+            el.innerHTML = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">ยังไม่มีคำถาม</p>';
+            return;
+          }
+          el.innerHTML = list.map(q => `
+            <div style="border:1.5px solid #e8f0fe;border-radius:12px;padding:12px;margin-bottom:10px;background:#f8faff;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:11px;font-weight:700;color:#2563eb;">👤 ${q.student}</span>
+                <span style="font-size:10px;color:#94a3b8;">${q.date}</span>
+              </div>
+              <p style="font-size:12px;font-weight:700;color:#1e293b;margin:0 0 8px;">❓ ${q.question}</p>
+              ${q.answer
+                ? `<p style="font-size:11px;color:#16a34a;margin:0 0 8px;padding:8px;background:#f0fdf4;border-radius:8px;font-weight:600;">✅ ${q.answer}</p>`
+                : ''
+              }
+              <div style="display:flex;gap:6px;">
+                <input id="qa-input-${q.rowIndex}" type="text" placeholder="${q.answer ? 'แก้ไขคำตอบ...' : 'พิมพ์คำตอบ...'}" value="${q.answer || ''}"
+                  style="flex:1;padding:8px 10px;background:white;border:1.5px solid #e8f0fe;border-radius:8px;outline:none;font-family:'Kanit',sans-serif;font-size:12px;"
+                  onfocus="this.style.borderColor='#4facfe'" onblur="this.style.borderColor='#e8f0fe'">
+                <button onclick="submitAdminAnswer(${q.rowIndex})"
+                  style="padding:8px 14px;border-radius:8px;border:none;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;font-family:'Kanit',sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  ส่ง
+                </button>
+              </div>
+            </div>`).join('');
+        })
+        .getAllQA();
+    }
+
+    // ── Admin ตอบ Q&A จากเว็บ ──
+    function submitAdminAnswer(rowIndex) {
+      const input  = document.getElementById(`qa-input-${rowIndex}`);
+      const answer = input.value.trim();
+      if (!answer) return;
+      input.disabled = true;
+      google.script.run
+        .withSuccessHandler(() => {
+          Swal.fire({ icon:'success', title:'ส่งคำตอบแล้ว!', timer:1200, showConfirmButton:false });
+          loadAdminQA();
+        })
+        .withFailureHandler(e => {
+          input.disabled = false;
+          Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:e.message });
+        })
+        .answerQuestion(rowIndex, answer);
+    }
+
+    // ─────────────────────────────────────────
+    // COUNTDOWN
+    // ─────────────────────────────────────────
     function renderCountdown() {
       if (isAdmin) return;
       const EXAM_DATE = new Date('2026-03-28T08:00:00');
@@ -409,30 +1158,17 @@
           const urgency = days <= 7  ? 'from-red-500 to-orange-400'
                         : days <= 30 ? 'from-orange-400 to-yellow-400'
                         :              'from-blue-500 to-cyan-400';
-          /* ── [แก้ไข] ใช้ class countdown-num / countdown-sep / countdown-label ── */
           html = `
             <div class="insta-card p-4 mb-4 border-0 bg-gradient-to-r ${urgency} text-white text-center shadow-lg">
               <p style="font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:2px;opacity:0.85;margin-bottom:10px;">⏳ เหลือเวลาอีก</p>
               <div class="flex justify-center items-end gap-2">
-                <div>
-                  <p class="countdown-num">${days}</p>
-                  <p class="countdown-label">วัน</p>
-                </div>
+                <div><p class="countdown-num">${days}</p><p class="countdown-label">วัน</p></div>
                 <p class="countdown-sep">:</p>
-                <div>
-                  <p class="countdown-num">${String(hours).padStart(2,'0')}</p>
-                  <p class="countdown-label">ชั่วโมง</p>
-                </div>
+                <div><p class="countdown-num">${String(hours).padStart(2,'0')}</p><p class="countdown-label">ชั่วโมง</p></div>
                 <p class="countdown-sep">:</p>
-                <div>
-                  <p class="countdown-num">${String(minutes).padStart(2,'0')}</p>
-                  <p class="countdown-label">นาที</p>
-                </div>
+                <div><p class="countdown-num">${String(minutes).padStart(2,'0')}</p><p class="countdown-label">นาที</p></div>
                 <p class="countdown-sep">:</p>
-                <div>
-                  <p class="countdown-num tabular-nums">${String(seconds).padStart(2,'0')}</p>
-                  <p class="countdown-label">วินาที</p>
-                </div>
+                <div><p class="countdown-num tabular-nums">${String(seconds).padStart(2,'0')}</p><p class="countdown-label">วินาที</p></div>
               </div>
               <p style="font-size:10px;margin-top:12px;opacity:0.85;font-style:italic;font-weight:600;">ก่อนวันสอบเข้า ม.1 💪</p>
             </div>`;
@@ -446,7 +1182,6 @@
       el.id = 'countdown-widget';
       const area = document.getElementById('admin-selector-area');
       area.parentNode.insertBefore(el, area.nextSibling);
-
       update();
       setInterval(update, 1000);
     }
@@ -469,34 +1204,73 @@
         .then(res => { if (res.isConfirmed) { localStorage.clear(); location.reload(); } });
     }
 
+    // ── FAB nav ──
+    let fabOpen = false;
+
+    function toggleFAB() {
+      fabOpen = !fabOpen;
+      document.getElementById('fab-overlay').classList.toggle('open', fabOpen);
+      document.getElementById('fab-menu').classList.toggle('open', fabOpen);
+      document.getElementById('fab-main-btn').classList.toggle('open', fabOpen);
+      document.getElementById('fab-main-btn').textContent = fabOpen ? '✕' : '☰';
+    }
+
+    function closeFAB() {
+      fabOpen = false;
+      document.getElementById('fab-overlay').classList.remove('open');
+      document.getElementById('fab-menu').classList.remove('open');
+      document.getElementById('fab-main-btn').classList.remove('open');
+      document.getElementById('fab-main-btn').textContent = '☰';
+    }
+
+    function selectSection(sec, icon, name, sub) {
+      closeFAB();
+      showSection(sec);
+      document.getElementById('cp-icon').textContent = icon;
+      document.getElementById('cp-name').textContent = name;
+      document.getElementById('cp-sub').textContent  = sub;
+    }
+
     function showSection(sec) {
-      const mainContainer = document.getElementById('main-container');
+      // Hide all sections
+      document.querySelectorAll('section[id$="-section"]').forEach(s => s.classList.add('hidden'));
+
+      // Width for videos
+      const mc = document.getElementById('main-container');
       if (sec === 'videos') {
-        mainContainer.classList.replace('max-w-md', 'max-w-full');
-        mainContainer.classList.add('lg:px-20');
+        mc.style.maxWidth = '100%';
+        mc.classList.add('lg:px-20');
       } else {
-        mainContainer.classList.replace('max-w-full', 'max-w-md');
-        mainContainer.classList.remove('lg:px-20');
+        mc.style.maxWidth = '';
+        mc.classList.remove('lg:px-20');
       }
 
-      ['individual', 'overview', 'answers', 'qa', 'videos'].forEach(s => {
-        document.getElementById(`${s}-section`)?.classList.add('hidden');
-      });
-      document.getElementById(`${sec}-section`)?.classList.remove('hidden');
+      const target = document.getElementById(`${sec}-section`);
+      if (target) target.classList.remove('hidden');
 
-      const btnMap = { individual: 'btn-indiv', overview: 'btn-over', answers: 'btn-answers', qa: 'btn-qa', videos: 'btn-videos' };
-      Object.entries(btnMap).forEach(([key, id]) => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
-        btn.classList.toggle('active', key === sec);
-      });
-
-      if (sec === 'qa') document.getElementById('qa-badge').classList.add('hidden');
-      if (sec === 'videos' && !isVideosLoaded) renderVideos();
-      if (sec === 'qa'     && !isQALoaded)     renderQA();
+      if (sec === 'qa')            document.getElementById('qa-badge')?.classList.add('hidden');
+      if (sec === 'notifications') renderNotifications();
+      if (sec === 'videos'  && !isVideosLoaded) renderVideos();
+      if (sec === 'qa'      && !isQALoaded)     renderQA();
+      if (sec === 'admin')                      renderAdminDashboard();
     }
 
     function setupAdminView() {
+      // Populate "ส่งถึง" dropdown with student names when data is ready
+      const populateTargets = () => {
+        const sel = document.getElementById('ann-target');
+        if (!sel || !globalData.length) return;
+        const students = [...new Set(globalData.map(r => r[0]))].sort();
+        students.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name; opt.textContent = '👤 ' + name;
+          sel.appendChild(opt);
+        });
+      };
+      // Try immediately, retry after data loads
+      setTimeout(populateTargets, 1500);
+
+      // Admin selector dropdown
       const names = [...new Set(globalData.map(r => r[0]))].sort();
       document.getElementById('admin-selector-area').innerHTML = `
         <div class="insta-card p-4 mb-6 bg-blue-600 text-center">
@@ -731,10 +1505,10 @@
                 </thead>
                 <tbody>
                   ${sorted.map((r, i) => {
-                    const isMe       = r[0] === currentUser;
+                    const isMe        = r[0] === currentUser;
                     const displayName = isAdmin ? `${i+1}.${r[0]}` : (isMe ? '🌟 คุณ' : `${i+1}`);
-                    const rowBg      = isMe ? '#eff6ff' : (i % 2 === 0 ? '#ffffff' : '#fafafa');
-                    const getColor   = (score, col) => {
+                    const rowBg       = isMe ? '#eff6ff' : (i % 2 === 0 ? '#ffffff' : '#fafafa');
+                    const getColor    = (score, col) => {
                       const vals = filtered.map(r => parseFloat(r[col] || 0));
                       const max  = Math.max(...vals); const min = Math.min(...vals);
                       if (score === max && max !== min) return '#16a34a';
@@ -749,7 +1523,8 @@
                         <td style="text-align:center;color:${getColor(parseFloat(r[3]),3)};font-weight:${getColor(parseFloat(r[3]),3)!=='#64748b'?'900':'400'};">${parseFloat(r[3]).toFixed(0)}</td>
                         <td style="text-align:center;color:${getColor(parseFloat(r[4]),4)};font-weight:${getColor(parseFloat(r[4]),4)!=='#64748b'?'900':'400'};">${parseFloat(r[4]).toFixed(0)}</td>
                         <td style="text-align:center;color:${getColor(parseFloat(r[5]),5)};font-weight:${getColor(parseFloat(r[5]),5)!=='#64748b'?'900':'400'};">${parseFloat(r[5]).toFixed(0)}</td>
-                        <td style="text-align:;fright;padding-right:8pxont-weight:900;color:${isMe?'#2563eb':'#1e293b'};">${parseFloat(r[7]).toFixed(2)}</td>
+                        <!-- 🐛 FIX: แก้ typo CSS ใน column % (เดิม: text-align:;fright;padding-right:8pxont-weight) -->
+                        <td style="text-align:right;padding-right:8px;font-weight:900;color:${isMe?'#2563eb':'#1e293b'};">${parseFloat(r[7]).toFixed(2)}</td>
                       </tr>`;
                   }).join('')}
                 </tbody>
@@ -830,7 +1605,6 @@
       });
     }
 
-    // ─── [แก้ไข] renderVideos — แสดง % แยกแต่ละคลิป + นับ x/y เฉพาะวิดีโอ ───
     function renderVideos() {
       if (isVideosLoaded) return;
 
@@ -867,20 +1641,13 @@
 
               container.innerHTML = Object.keys(groups).map((groupName, idx) => {
                 const items = groups[groupName];
-
-                // ── [แก้ไข] นับเฉพาะ item ที่เป็น video ──
-                const videoItems     = items.filter(item => item.type.toLowerCase().includes('video'));
+                const videoItems      = items.filter(item => item.type.toLowerCase().includes('video'));
                 const completedVideos = videoItems.filter(item =>
                   progress.includes(`${item.lessonId}-${item.subTitle.trim()}`)
                 ).length;
-                const totalVideos    = videoItems.length;
+                const totalVideos = videoItems.length;
+                const percent     = totalVideos > 0 ? Math.round((completedVideos / totalVideos) * 100) : 0;
 
-                // % ของกลุ่ม (คิดจากวิดีโอทั้งหมดในกลุ่ม)
-                const percent = totalVideos > 0
-                  ? Math.round((completedVideos / totalVideos) * 100)
-                  : 0;
-
-                // นับ index ของวิดีโอแต่ละตัวในกลุ่ม
                 let videoIndexInGroup = 0;
 
                 return `
@@ -895,7 +1662,6 @@
                             <div style="background:rgba(79,172,254,0.2);border-radius:8px;padding:5px 10px;">
                               <span style="font-size:10px;font-weight:700;color:#4facfe;text-transform:uppercase;letter-spacing:1px;">บทเรียน</span>
                             </div>
-                            <!-- [แก้ไข] แสดงเฉพาะจำนวนวิดีโอ -->
                             <span style="font-size:10px;color:rgba(255,255,255,0.5);">
                               ${totalVideos > 0 ? `${completedVideos}/${totalVideos} วิดีโอเสร็จแล้ว` : 'ไม่มีคลิปวิดีโอ'}
                             </span>
@@ -919,18 +1685,16 @@
                     <div id="content-${idx}" class="accordion-content-wrapper" style="background:#fafbff;">
                       <div style="padding:10px;">
                         ${items.map((item) => {
-                          const cleanTitle    = item.subTitle.trim();
-                          const isDone        = progress.includes(`${item.lessonId}-${cleanTitle}`);
-                          const isVideo       = item.type.toLowerCase().includes('video');
+                          const cleanTitle = item.subTitle.trim();
+                          const isDone     = progress.includes(`${item.lessonId}-${cleanTitle}`);
+                          const isVideo    = item.type.toLowerCase().includes('video');
 
-                          // ── [แก้ไข] นับ index เฉพาะวิดีโอ และคำนวณ % แต่ละคลิป ──
                           let clipLabel = '';
                           let clipPct   = '';
                           if (isVideo) {
                             videoIndexInGroup++;
-                            const pct = isDone ? 100 : 0; // 0% = ยังไม่ดู, 100% = ดูแล้ว
                             clipLabel = `${videoIndexInGroup}/${totalVideos}`;
-                            clipPct   = `${pct}%`;
+                            clipPct   = isDone ? '100%' : '0%';
                           }
 
                           const btnText       = isDone ? '✓ เสร็จแล้ว' : (isVideo ? '▶ เข้าเรียน' : '📄 ดูชีท');
@@ -943,7 +1707,6 @@
                               onmouseover="this.style.borderColor='#4facfe';this.style.boxShadow='0 2px 8px rgba(79,172,254,0.12)'"
                               onmouseout="this.style.borderColor='${isDone?'#bbf7d0':'#f1f5f9'}';this.style.boxShadow='none'">
                               <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
-                                <!-- Icon -->
                                 <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
                                   background:${isDone?'#f0fdf4':isVideo?'#eff6ff':'#f5f3ff'};">
                                   <span style="font-size:16px;">${isDone ? '✅' : isVideo ? '🎬' : '📄'}</span>
@@ -953,7 +1716,6 @@
                                   <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
                                     ${item.duration ? `<span style="font-size:10px;color:#94a3b8;">${item.duration}</span>` : ''}
                                     ${isVideo ? `
-                                      <!-- [แก้ไข] แสดง x/y และ % แยกแต่ละคลิป -->
                                       <span style="font-size:10px;font-weight:700;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 5px;">คลิป ${clipLabel}</span>
                                       <span style="font-size:10px;font-weight:700;color:${isDone?'#16a34a':'#0ea5e9'};background:${isDone?'#f0fdf4':'#eff6ff'};border-radius:4px;padding:1px 6px;">${clipPct}</span>
                                     ` : ''}
@@ -1031,9 +1793,20 @@
       }
     }
 
+    // 🐛 FIX: ป้องกัน YT.Player ซ้ำซ้อน — destroy ก่อนสร้างใหม่เสมอ
+    let _activeYTPlayer = null;
+    let _activeYTPollInterval = null;
+
     function openVideoPlayer(id, title, url) {
       const videoId  = extractVideoId(url);
       const embedUrl = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1`;
+
+      // Destroy previous player instance if exists
+      if (_activeYTPollInterval) { clearInterval(_activeYTPollInterval); _activeYTPollInterval = null; }
+      if (_activeYTPlayer) {
+        try { _activeYTPlayer.destroy(); } catch(_) {}
+        _activeYTPlayer = null;
+      }
 
       Swal.fire({
         title: `<span class="text-lg font-bold">${title}</span>`,
@@ -1055,29 +1828,34 @@
         width: '90%', showConfirmButton: false, showCloseButton: true,
         didOpen: () => {
           let marked = false;
-          let pollInterval = null;
 
-          const player = new YT.Player('yt-player', {
+          _activeYTPlayer = new YT.Player('yt-player', {
             events: {
               onReady: () => {
-                pollInterval = setInterval(() => {
+                _activeYTPollInterval = setInterval(() => {
                   try {
-                    const current  = player.getCurrentTime();
-                    const duration = player.getDuration();
+                    const current  = _activeYTPlayer.getCurrentTime();
+                    const duration = _activeYTPlayer.getDuration();
                     if (!duration) return;
 
                     const pct = Math.round((current / duration) * 100);
-                    document.getElementById('watch-pct').textContent = pct + '%';
-                    document.getElementById('watch-bar').style.width  = pct + '%';
+                    const pctEl  = document.getElementById('watch-pct');
+                    const barEl  = document.getElementById('watch-bar');
+                    if (pctEl) pctEl.textContent = pct + '%';
+                    if (barEl) barEl.style.width  = pct + '%';
 
                     if (pct >= 80 && !marked) {
                       marked = true;
-                      document.getElementById('watch-msg').textContent  = '✅ บันทึกความคืบหน้าแล้ว!';
-                      document.getElementById('watch-msg').style.color  = '#22c55e';
-                      document.getElementById('watch-pct').style.color  = '#22c55e';
-                      document.getElementById('watch-bar').style.background = '#22c55e';
+                      const msgEl = document.getElementById('watch-msg');
+                      if (msgEl)  msgEl.textContent  = '✅ บันทึกความคืบหน้าแล้ว!';
+                      if (msgEl)  msgEl.style.color   = '#22c55e';
+                      if (pctEl)  pctEl.style.color   = '#22c55e';
+                      if (barEl)  barEl.style.background = '#22c55e';
+                      clearInterval(_activeYTPollInterval);
+                      _activeYTPollInterval = null;
                       google.script.run
-                        .withSuccessHandler(() => { isVideosLoaded = false; renderVideos(); })
+                        // 🐛 FIX: อัพเดทเฉพาะ item ที่เปลี่ยน ไม่ reset scroll
+                        .withSuccessHandler(() => { _refreshVideoItem(id, title); })
                         .markVideoAsComplete(currentUser, id, title);
                     }
                   } catch(e) {}
@@ -1086,26 +1864,79 @@
               onStateChange: event => {
                 if (event.data === YT.PlayerState.ENDED && !marked) {
                   marked = true;
-                  document.getElementById('watch-msg').textContent = '✅ บันทึกความคืบหน้าแล้ว!';
-                  document.getElementById('watch-msg').style.color = '#22c55e';
+                  const msgEl = document.getElementById('watch-msg');
+                  if (msgEl) msgEl.textContent = '✅ บันทึกความคืบหน้าแล้ว!';
+                  if (msgEl) msgEl.style.color  = '#22c55e';
+                  if (_activeYTPollInterval) { clearInterval(_activeYTPollInterval); _activeYTPollInterval = null; }
                   google.script.run
                     .withSuccessHandler(() => {
+                      _refreshVideoItem(id, title);
                       Swal.fire({ icon: 'success', title: 'เยี่ยมมาก! 🎉', text: 'บันทึกการเรียนบทนี้แล้ว', timer: 1500, showConfirmButton: false });
-                      isVideosLoaded = false;
-                      renderVideos();
                     })
                     .markVideoAsComplete(currentUser, id, title);
                 }
               }
             }
           });
-
-          Swal.getPopup().addEventListener('click', e => {
-            if (e.target.classList.contains('swal2-close')) {
-              if (pollInterval) clearInterval(pollInterval);
-            }
-          });
+        },
+        willClose: () => {
+          // 🐛 FIX: clean up เสมอเมื่อปิด modal
+          if (_activeYTPollInterval) { clearInterval(_activeYTPollInterval); _activeYTPollInterval = null; }
+          if (_activeYTPlayer) {
+            try { _activeYTPlayer.destroy(); } catch(_) {}
+            _activeYTPlayer = null;
+          }
         }
+      });
+    }
+
+    // 🐛 FIX: อัพเดทเฉพาะ item วิดีโอที่เสร็จแล้ว ไม่ต้อง re-render ทั้งหน้า (ป้องกัน scroll กระโดด)
+    function _refreshVideoItem(lessonId, subTitle) {
+      studentProgress.push(`${lessonId}-${subTitle}`);
+      // Update button state + progress bar in-place
+      document.querySelectorAll('#videoList [onclick]').forEach(btn => {
+        const onclick = btn.getAttribute('onclick') || '';
+        if (onclick.includes(`'${lessonId}'`) && onclick.includes(`\`${subTitle}\``)) {
+          btn.style.background = '#f0fdf4';
+          btn.style.color      = '#16a34a';
+          btn.style.cursor     = 'default';
+          btn.style.boxShadow  = 'none';
+          btn.textContent      = '✓ เสร็จแล้ว';
+          btn.setAttribute('onclick', ''); // disable button
+
+          const row      = btn.closest('div[style*="border-radius:14px"]');
+          if (row) {
+            row.style.borderColor = '#bbf7d0';
+            const icon = row.querySelector('span[style*="font-size:16px"]');
+            if (icon) icon.textContent = '✅';
+            const bar = row.querySelector('div[style*="height:100%"]');
+            if (bar) { bar.style.width = '100%'; bar.style.background = '#22c55e'; }
+            const pctBadge = row.querySelectorAll('span[style*="border-radius:4px"]')[1];
+            if (pctBadge) { pctBadge.textContent = '100%'; pctBadge.style.color = '#16a34a'; pctBadge.style.background = '#f0fdf4'; }
+          }
+        }
+      });
+
+      // Update group-level progress bar
+      _refreshGroupProgress();
+    }
+
+    function _refreshGroupProgress() {
+      // Recalculate each group's completed count and update the header bar
+      document.querySelectorAll('#videoList .insta-card').forEach((card, idx) => {
+        const allBtns   = card.querySelectorAll('button[onclick]');
+        const total     = card.querySelectorAll('span[style*="คลิป"]').length;
+        const completed = card.querySelectorAll('span[style*="font-size:16px"]');
+        let doneCount   = 0;
+        completed.forEach(ic => { if (ic.textContent.trim() === '✅') doneCount++; });
+        const pct = total > 0 ? Math.round(doneCount / total * 100) : 0;
+
+        const headerBar = card.querySelector('div[style*="rgba(255,255,255,0.1)"] > div');
+        if (headerBar) headerBar.style.width = pct + '%';
+        const pctCircle = card.querySelector('div[style*="border-radius:50%"] span');
+        if (pctCircle) { pctCircle.textContent = pct + '%'; }
+        const countLabel = card.querySelector('span[style*="rgba(255,255,255,0.5)"]');
+        if (countLabel && total > 0) countLabel.textContent = `${doneCount}/${total} วิดีโอเสร็จแล้ว`;
       });
     }
 
@@ -1139,46 +1970,50 @@
             container.innerHTML = '<p class="text-center text-gray-400 text-xs py-10">ยังไม่มีประวัติการถาม</p>';
             return;
           }
-          container.innerHTML = qaList.map(item => `
-            <div class="bg-white p-4 rounded-2xl border border-gray-50 shadow-sm">
-              <div class="text-[10px] text-gray-400 mb-2 font-bold uppercase">${item.date}</div>
-              <p class="text-sm text-gray-700 mb-3 font-medium">❓ ${item.question}</p>
-              <div class="pl-4 border-l-2 border-green-400 bg-green-50/30 p-3 rounded-r-xl">
-                <p class="text-[10px] text-green-600 font-bold mb-1">ครูผู้สอนตอบ:</p>
-                <p class="text-sm text-gray-800 font-bold">${item.answer}</p>
-              </div>
-            </div>`).join('');
+          container.innerHTML = qaList.map(item => {
+            const isAnswered = item.answer && item.answer !== "รอครูผู้สอนตอบสักครู่...";
+            const readKey    = `qa_read_${currentUser}_${item.date}`;
+            if (isAnswered) try { localStorage.setItem(readKey, '1'); } catch(_) {}
+            return `
+              <div class="bg-white p-4 rounded-2xl border ${isAnswered?'border-green-100':'border-gray-50'} shadow-sm">
+                <div class="text-[10px] text-gray-400 mb-2 font-bold uppercase">${item.date}</div>
+                <p class="text-sm text-gray-700 mb-3 font-medium">❓ ${item.question}</p>
+                <div class="pl-4 border-l-2 ${isAnswered?'border-green-400 bg-green-50/30':'border-gray-200 bg-gray-50/30'} p-3 rounded-r-xl">
+                  <p class="text-[10px] ${isAnswered?'text-green-600':'text-gray-400'} font-bold mb-1">ครูผู้สอนตอบ:</p>
+                  <p class="text-sm ${isAnswered?'text-gray-800 font-bold':'text-gray-400 italic'}">${item.answer}</p>
+                </div>
+              </div>`;
+          }).join('');
         })
         .getMyQA(currentUser);
     }
 
     function downloadScoreImage(btn) {
       const area = document.getElementById('capture-area');
-      btn.innerHTML = "⌛...";
-      btn.disabled  = true;
+      btn.innerHTML = "⌛..."; btn.disabled = true;
       html2canvas(area, { scale: 3, backgroundColor: "#ffffff", logging: false }).then(canvas => {
-        const link      = document.createElement('a');
-        link.download   = 'My-Ranking.png';
-        link.href       = canvas.toDataURL("image/png");
-        link.click();
-        btn.innerHTML   = "📸 บันทึกภาพ";
-        btn.disabled    = false;
+        const link = document.createElement('a');
+        link.download = 'My-Ranking.png'; link.href = canvas.toDataURL("image/png"); link.click();
+        btn.innerHTML = "📸 บันทึกภาพ"; btn.disabled = false;
       });
     }
 
     function downloadIndividualImage(btn) {
       const area = document.getElementById('capture-individual');
-      btn.innerHTML = "⌛...";
-      btn.disabled  = true;
+      btn.innerHTML = "⌛..."; btn.disabled = true;
       html2canvas(area, { scale: 3, backgroundColor: "#ffffff", logging: false, useCORS: true }).then(canvas => {
-        const name    = document.querySelector('#capture-individual h2')?.innerText || 'Report';
-        const link    = document.createElement('a');
-        link.download = `Report-${name}.png`;
-        link.href     = canvas.toDataURL("image/png");
-        link.click();
-        btn.innerHTML = "📸 บันทึกภาพ";
-        btn.disabled  = false;
+        const name = document.querySelector('#capture-individual h2')?.innerText || 'Report';
+        const link = document.createElement('a');
+        link.download = `Report-${name}.png`; link.href = canvas.toDataURL("image/png"); link.click();
+        btn.innerHTML = "📸 บันทึกภาพ"; btn.disabled = false;
       });
+    }
+
+    // ── GAS fallback: เรียก startLoadData ตรงๆ เผื่อ window load event ไม่ fire ──
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startLoadData);
+    } else {
+      startLoadData();
     }
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
